@@ -108,6 +108,7 @@ const GrammarAnalysis = () => {
         }, 50);
     }, [currentAnalysisType, pseudoCodeLine]);
 
+
     useEffect(() => {
         setCachedResults({});
         setAnalysisData({
@@ -218,11 +219,11 @@ const GrammarAnalysis = () => {
                     {currentAnalysisType !== "LL1" && (
                         <>
                             <Typography variant="h6">{currentAnalysisType} Algorithm</Typography>
-                            <MathJaxContext style={{ opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}>
-                            <Paper className="pseudo-code">
+                            <MathJaxContext>
+                                <Paper className="pseudo-code" style={{ opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}>
                                     {pseudoCodeMapping[currentAnalysisType].map((line, index) => (
-                                        <Box key={index} className={index === pseudoCodeLine ? "highlighted" : ""}>
-                                            <MathJax>{`\\( ${line} \\)`}</MathJax>
+                                        <Box key={currentAnalysisType + "-" + index} className={index === pseudoCodeLine ? "highlighted" : ""}>
+                                            <MathJax key={currentAnalysisType + "-" + index}>{`\\( ${line} \\)`}</MathJax>
                                         </Box>
                                     ))}
                                 </Paper>
