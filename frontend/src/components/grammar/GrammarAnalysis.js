@@ -131,21 +131,6 @@ const GrammarAnalysis = () => {
     };
 
     const handleAnalysisTypeChange = async (type) => {
-        if (!grammar.trim()) {
-            setCurrentAnalysisType(type);
-            setAnalysisData({
-                dynamicResult: {},
-                stepDetails: "",
-                ll1Table: {},
-                isLL1: false,
-                ll1Description: "",
-            });
-            setCurrentStepIndex(0);
-            setPseudoCodeLine(0);
-            setCachedResults({});
-            return;
-        }
-
         setCachedResults(prev => ({
             ...prev,
             [currentAnalysisType]: {
@@ -175,7 +160,9 @@ const GrammarAnalysis = () => {
             setCurrentStepIndex(stepIndex || 0);
             setPseudoCodeLine(pseudoLine || 0);
         } else {
-            await fetchAnalysis();
+            if (grammar.trim()) {
+                await fetchAnalysis();
+            }
         }
     };
 
@@ -215,6 +202,7 @@ const GrammarAnalysis = () => {
                         key={type}
                         onClick={() => handleAnalysisTypeChange(type)}
                         className={`tab-btn ${currentAnalysisType === type ? "active" : ""}`}
+                        disabled={grammar.trim() === ""}
                     >
                         {type}
                     </Button>
@@ -236,9 +224,11 @@ const GrammarAnalysis = () => {
                         <>
                             <Typography variant="h6">{currentAnalysisType} Algorithm</Typography>
                             <MathJaxContext>
-                                <Paper className="pseudo-code" style={{ opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}>
+                                <Paper className="pseudo-code"
+                                       style={{opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out"}}>
                                     {pseudoCodeMapping[currentAnalysisType].map((line, index) => (
-                                        <Box ref={mathJaxRef} key={currentAnalysisType + "-" + index} className={index === pseudoCodeLine ? "highlighted" : ""}>
+                                        <Box ref={mathJaxRef} key={currentAnalysisType + "-" + index}
+                                             className={index === pseudoCodeLine ? "highlighted" : ""}>
                                             <MathJax>{`\\( ${line} \\)`}</MathJax>
                                         </Box>
                                     ))}
@@ -247,7 +237,7 @@ const GrammarAnalysis = () => {
 
                             <Typography variant="h6" className="step-details-title">Step Details</Typography>
                             <Paper className="details-box">
-                                <Typography style={{ whiteSpace: "pre-line" }}>
+                                <Typography style={{whiteSpace: "pre-line"}}>
                                     {analysisData.stepDetails || "No details available"}
                                 </Typography>
                             </Paper>
@@ -257,21 +247,21 @@ const GrammarAnalysis = () => {
 
                 <div className="divider" onMouseDown={handleMouseDown}/>
 
-                <div className="right-panel" style={{width: `${100 - dividerPos}%` }}>
+                <div className="right-panel" style={{width: `${100 - dividerPos}%`}}>
                     {currentAnalysisType !== "LL1" && (
                         <>
-                    <Typography variant="h6">Result</Typography>
-                    <Paper className="result-box">
-                        {analysisData.dynamicResult && Object.keys(analysisData.dynamicResult).length > 0 ? (
-                            Object.entries(analysisData.dynamicResult).map(([key, values]) => (
-                                <div key={key}>
-                                    <strong>{key}</strong>: {Array.isArray(values) ? values.join(", ") : values}
-                                </div>
-                            ))
-                        ) : (
-                            <Typography>No data available</Typography>
-                        )}
-                    </Paper>
+                            <Typography variant="h6">Result</Typography>
+                            <Paper className="result-box">
+                                {analysisData.dynamicResult && Object.keys(analysisData.dynamicResult).length > 0 ? (
+                                    Object.entries(analysisData.dynamicResult).map(([key, values]) => (
+                                        <div key={key}>
+                                            <strong>{key}</strong>: {Array.isArray(values) ? values.join(", ") : values}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <Typography>No data available</Typography>
+                                )}
+                            </Paper>
                         </>
                     )}
 
@@ -313,19 +303,28 @@ const GrammarAnalysis = () => {
 
                     {currentAnalysisType !== "LL1" && (
                         <div className="controls">
-                            <Button onClick={() => handleStep(currentStepIndex - 1)} disabled={currentStepIndex === 0 || isLoading}>
+                            <Button
+                                onClick={() => handleStep(currentStepIndex - 1)}
+                                disabled={currentStepIndex === 0 || isLoading || grammar.trim() === ""}
+                            >
                                 PREV
                             </Button>
                             <Button
                                 onClick={() => handleStep(currentStepIndex + 1)}
-                                disabled={isLoading || pseudoCodeLine + 1 >= pseudoCodeMapping[currentAnalysisType].length}
+                                disabled={isLoading || pseudoCodeLine + 1 >= pseudoCodeMapping[currentAnalysisType].length || grammar.trim() === ""}
                             >
                                 NEXT
                             </Button>
-                            <Button onClick={() => handleStep(0)} disabled={isLoading}>
+                            <Button
+                                onClick={() => handleStep(0)}
+                                disabled={isLoading || grammar.trim() === ""}
+                            >
                                 RESET
                             </Button>
-                            <Button onClick={() => handleStep(9999)} disabled={isLoading}>
+                            <Button
+                                onClick={() => handleStep(9999)}
+                                disabled={isLoading || grammar.trim() === ""}
+                            >
                                 RESULT
                             </Button>
                         </div>
