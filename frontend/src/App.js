@@ -1,10 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import GrammarAnalysis from './components/grammar/GrammarAnalysis';
 
 function App() {
     return (
-        <Router basename="/vizualizacia-algoritmov">
+        <Router>
             <Routes>
                 <Route path="/analysis" element={<GrammarAnalysis />} />
                 <Route path="/" element={<Navigate to="/analysis" />} />
