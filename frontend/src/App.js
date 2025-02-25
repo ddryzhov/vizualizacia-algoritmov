@@ -4,7 +4,7 @@ import GrammarAnalysis from './components/grammar/GrammarAnalysis';
 
 function App() {
     return (
-        <Router>
+        <Router basename="/vizualizacia-algoritmov">
             <Routes>
                 <Route path="/analysis" element={<GrammarAnalysis />} />
                 <Route path="/" element={<Navigate to="/analysis" />} />
