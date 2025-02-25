@@ -95,6 +95,25 @@ const GrammarAnalysis = () => {
         setPseudoCodeLine(0);
     }, [grammar, setCachedResults, setAnalysisData, setCurrentStepIndex, setPseudoCodeLine]);
 
+    useEffect(() => {
+        setTimeout(() => {
+            window.MathJax?.typeset?.(); // ✅ Форсируем MathJax ререндер
+        }, 100);
+    }, [currentAnalysisType]);
+
+    useEffect(() => {
+        setCachedResults({});
+        setAnalysisData({
+            dynamicResult: {},
+            stepDetails: "",
+            ll1Table: {},
+            isLL1: false,
+            ll1Description: "",
+        });
+        setCurrentStepIndex(0);
+        setPseudoCodeLine(0);
+    }, [grammar]);
+
     const handleStep = async (stepIndex) => {
         await fetchStep(stepIndex);
         setCurrentStepIndex(stepIndex);
