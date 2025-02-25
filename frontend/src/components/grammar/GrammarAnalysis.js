@@ -95,17 +95,21 @@ const GrammarAnalysis = () => {
         setPseudoCodeLine(0);
     }, [grammar, setCachedResults, setAnalysisData, setCurrentStepIndex, setPseudoCodeLine]);
 
+    const mathJaxRef = useRef(null);
     const [isRendered, setIsRendered] = useState(false);
 
     useEffect(() => {
         setIsRendered(false); // Скрываем перед обновлением
-        setTimeout(() => {
-            if (window.MathJax) {
-                window.MathJax.typesetPromise().then(() => {
-                    setIsRendered(true); // Показываем после рендера
-                });
+
+        const renderMathJax = async () => {
+            if (window.MathJax && mathJaxRef.current) {
+                await window.MathJax.typesetPromise();
+                setIsRendered(true); // Показываем после рендера
             }
-        }, 50);
+        };
+
+        // Добавляем небольшую задержку, чтобы избежать артефактов
+        setTimeout(renderMathJax, 20);
     }, [currentAnalysisType, pseudoCodeLine]);
 
 
@@ -222,8 +226,8 @@ const GrammarAnalysis = () => {
                             <MathJaxContext>
                                 <Paper className="pseudo-code" style={{ opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}>
                                     {pseudoCodeMapping[currentAnalysisType].map((line, index) => (
-                                        <Box key={currentAnalysisType + "-" + index} className={index === pseudoCodeLine ? "highlighted" : ""}>
-                                            <MathJax key={currentAnalysisType + "-" + index}>{`\\( ${line} \\)`}</MathJax>
+                                        <Box ref={mathJaxRef} key={currentAnalysisType + "-" + index} className={index === pseudoCodeLine ? "highlighted" : ""}>
+                                            <MathJax>{`\\( ${line} \\)`}</MathJax>
                                         </Box>
                                     ))}
                                 </Paper>
