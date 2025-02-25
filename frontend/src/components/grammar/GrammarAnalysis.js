@@ -99,16 +99,15 @@ const GrammarAnalysis = () => {
     const [isRendered, setIsRendered] = useState(false);
 
     useEffect(() => {
-        setIsRendered(false); // Скрываем перед обновлением
+        setIsRendered(false);
 
         const renderMathJax = async () => {
             if (window.MathJax && mathJaxRef.current) {
                 await window.MathJax.typesetPromise();
-                setIsRendered(true); // Показываем после рендера
+                setIsRendered(true);
             }
         };
 
-        // Добавляем небольшую задержку, чтобы избежать артефактов
         setTimeout(renderMathJax, 20);
     }, [currentAnalysisType, pseudoCodeLine]);
 
