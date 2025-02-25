@@ -126,6 +126,19 @@ const GrammarAnalysis = () => {
     }, [grammar]);
 
     const handleStep = async (stepIndex) => {
+        if (stepIndex === 0 && grammar.trim() === "") {
+            setAnalysisData({
+                dynamicResult: {},
+                stepDetails: "",
+                ll1Table: {},
+                isLL1: false,
+                ll1Description: "",
+            });
+            setCurrentStepIndex(0);
+            setPseudoCodeLine(0);
+            return;
+        }
+
         await fetchStep(stepIndex);
         setCurrentStepIndex(stepIndex);
     };
