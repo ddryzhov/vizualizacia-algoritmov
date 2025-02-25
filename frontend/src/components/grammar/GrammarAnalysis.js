@@ -95,11 +95,18 @@ const GrammarAnalysis = () => {
         setPseudoCodeLine(0);
     }, [grammar, setCachedResults, setAnalysisData, setCurrentStepIndex, setPseudoCodeLine]);
 
+    const [isRendered, setIsRendered] = useState(false);
+
     useEffect(() => {
+        setIsRendered(false); // Скрываем перед обновлением
         setTimeout(() => {
-            window.MathJax?.typeset?.(); // ✅ Форсируем MathJax ререндер
-        }, 100);
-    }, [currentAnalysisType]);
+            if (window.MathJax) {
+                window.MathJax.typesetPromise().then(() => {
+                    setIsRendered(true); // Показываем после рендера
+                });
+            }
+        }, 50);
+    }, [currentAnalysisType, pseudoCodeLine]);
 
     useEffect(() => {
         setCachedResults({});
@@ -211,8 +218,8 @@ const GrammarAnalysis = () => {
                     {currentAnalysisType !== "LL1" && (
                         <>
                             <Typography variant="h6">{currentAnalysisType} Algorithm</Typography>
-                            <MathJaxContext>
-                                <Paper className="pseudo-code">
+                            <MathJaxContext style={{ opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}>
+                            <Paper className="pseudo-code">
                                     {pseudoCodeMapping[currentAnalysisType].map((line, index) => (
                                         <Box key={index} className={index === pseudoCodeLine ? "highlighted" : ""}>
                                             <MathJax>{`\\( ${line} \\)`}</MathJax>
