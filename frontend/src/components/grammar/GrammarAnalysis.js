@@ -131,6 +131,21 @@ const GrammarAnalysis = () => {
     };
 
     const handleAnalysisTypeChange = async (type) => {
+        if (!grammar.trim()) {
+            setCurrentAnalysisType(type);
+            setAnalysisData({
+                dynamicResult: {},
+                stepDetails: "",
+                ll1Table: {},
+                isLL1: false,
+                ll1Description: "",
+            });
+            setCurrentStepIndex(0);
+            setPseudoCodeLine(0);
+            setCachedResults({});
+            return;
+        }
+
         setCachedResults(prev => ({
             ...prev,
             [currentAnalysisType]: {
@@ -160,9 +175,7 @@ const GrammarAnalysis = () => {
             setCurrentStepIndex(stepIndex || 0);
             setPseudoCodeLine(pseudoLine || 0);
         } else {
-            if (grammar.trim()) {
-                await fetchAnalysis();
-            }
+            await fetchAnalysis();
         }
     };
 
