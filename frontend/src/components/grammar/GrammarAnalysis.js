@@ -27,7 +27,7 @@ const GrammarAnalysis = () => {
     const fetchStep = useCallback(async (stepIndex) => {
         setIsLoading(true);
         try {
-            const { data } = await axios.get("http://localhost:8080/api/grammar/step", {
+            const { data } = await axios.get("http://vizualizacia-algoritmov-production.up.railway.app/api/grammar/step", {
                 params: {
                     analysisType: currentAnalysisType,
                     stepIndex,
@@ -66,7 +66,7 @@ const GrammarAnalysis = () => {
 
         try {
             console.log("Sending a request to the server:", grammar);
-            await axios.post("http://localhost:8080/api/grammar/analyze", { grammar: grammar.trim() });
+            await axios.post("http://vizualizacia-algoritmov-production.up.railway.app/api/grammar/analyze", { grammar: grammar.trim() });
             await fetchStep(0);
         } catch (error) {
             console.error("Grammar Analysis Error:", error);
