@@ -15,6 +15,7 @@ import { ReactComponent as SunIcon } from "../../assets/icons/sun.svg";
 import { ReactComponent as MoonIcon } from "../../assets/icons/moon.svg";
 
 import TopBar from "./TopBar";
+import MobileBlocker from "../blocker/MobileBlocker";
 import GrammarInput from "./GrammarInput";
 import PseudoCodeBlock from "./PseudoCodeBlock";
 import StepDetails from "./StepDetails";
@@ -300,6 +301,8 @@ const GrammarAnalysis = () => {
     const pseudoCodeLines = pseudoCodeMapping[currentAnalysisType] || [];
 
     return (
+        <>
+            <MobileBlocker />
         <div className={`analysis-container ${theme}`}>
             <Typography variant="h4" className="title">
                 Grammar Analyzer
@@ -368,6 +371,7 @@ const GrammarAnalysis = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

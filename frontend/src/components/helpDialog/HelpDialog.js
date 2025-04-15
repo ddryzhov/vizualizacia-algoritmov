@@ -126,17 +126,17 @@ S -> 'a' [ 'b' ] { 'c' | 'd' }`}
                             <tr>
                                 <td>\eps</td>
                                 <td>epsilon</td>
-                                <td>ε</td>
+                                <td>epsilon</td>
                             </tr>
                             <tr>
                                 <td>\to</td>
                                 <td>-&gt;</td>
-                                <td>→</td>
+                                <td>-></td>
                             </tr>
                             <tr>
                                 <td>\mid</td>
                                 <td>|</td>
-                                <td>∣</td>
+                                <td>|</td>
                             </tr>
                             </tbody>
                         </table>
