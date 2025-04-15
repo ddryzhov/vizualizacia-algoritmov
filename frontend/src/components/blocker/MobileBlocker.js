@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../assets/styles/blocker/MobileBlocker.css";
 
 const MobileBlocker = () => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            const width = window.innerWidth;
+            setIsMobile(width <= 1024);
+        };
+
+        checkMobile();
+        window.addEventListener("resize", checkMobile);
+
+        return () => {
+            window.removeEventListener("resize", checkMobile);
+        };
+    }, []);
+
+    if (!isMobile) return null;
+
     return (
         <div className="mobile-blocker">
-            ⚠️ This application is not supported on mobile devices.<br />
-            Please open it on a laptop or desktop computer.
+            <div className="mobile-message">
+                This application is not supported on mobile devices.<br />
+                Please use a desktop or laptop computer.
+            </div>
         </div>
     );
 };
