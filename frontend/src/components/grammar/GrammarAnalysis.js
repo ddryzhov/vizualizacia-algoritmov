@@ -76,7 +76,7 @@ const GrammarAnalysis = () => {
 
             setIsLoading(true);
             try {
-                const { data } = await axios.post("http://localhost:8080/api/grammar/step", {
+                const { data } = await axios.post("https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/step", {
                     analysisType: currentAnalysisType,
                     stepIndex,
                     grammar: trimmedGrammar,
@@ -129,7 +129,7 @@ const GrammarAnalysis = () => {
         setCurrentStepIndex(0);
 
         try {
-            await axios.post("http://localhost:8080/api/grammar/analyze", { grammar: grammar.trim() });
+            await axios.post("https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/analyze", { grammar: grammar.trim() });
             await fetchStep(0);
         } catch (err) {
             console.error("Grammar Analysis Error:", err);
@@ -211,7 +211,7 @@ const GrammarAnalysis = () => {
      */
     const handleStep = async (stepIndex) => {
         const now = Date.now();
-        if (now - lastStepTimestamp < 300 || isLoading) return; // Блокировка: 300ms
+        if (now - lastStepTimestamp < 300 || isLoading) return;
 
         setLastStepTimestamp(now);
 
