@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/vizualizacia-algoritmov/static/css/main.33d146af.css",
+    "main.js": "/vizualizacia-algoritmov/static/js/main.3952d3bc.js",
+    "index.html": "/vizualizacia-algoritmov/index.html",
+    "static/media/sun.svg": "/vizualizacia-algoritmov/static/media/sun.0cf0c198d43ebd40c3451d4eff176867.svg",
+    "static/media/moon.svg": "/vizualizacia-algoritmov/static/media/moon.c294163ffaa018caefb664e324fdddc3.svg",
+    "main.33d146af.css.map": "/vizualizacia-algoritmov/static/css/main.33d146af.css.map",
+    "main.3952d3bc.js.map": "/vizualizacia-algoritmov/static/js/main.3952d3bc.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.33d146af.css",
+    "static/js/main.3952d3bc.js"
+  ]
+}
