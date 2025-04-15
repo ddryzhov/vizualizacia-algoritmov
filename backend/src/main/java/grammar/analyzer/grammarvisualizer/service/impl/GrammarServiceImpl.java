@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -121,6 +123,11 @@ public class GrammarServiceImpl implements GrammarService {
         }
         grammar.setProductionRuleList(rules);
         grammar.setProductionRuleNumbers(ruleNumbers);
+        grammar.setTransformedGrammar(
+                grammar.getProductionRules().entrySet().stream()
+                        .map(e -> e.getKey() + " -> " + String.join(" | ", e.getValue()))
+                        .collect(Collectors.joining("\n"))
+        );
 
         firstFollowPredictService.computeFirstSets(grammar.getProductionRules(),
                 nonTerminals, grammar);

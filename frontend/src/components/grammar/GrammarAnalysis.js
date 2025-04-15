@@ -1,9 +1,3 @@
-/**
- * Main container for the grammar analysis page.
- * Handles theme toggle, grammar input, analysis fetching,
- * and switching between FIRST, FOLLOW, PREDICT, LL(1) views.
- */
-
 import React, { useCallback, useMemo, useEffect, useRef, useState } from "react";
 import { Typography } from "@mui/material";
 import axios from "axios";
@@ -49,6 +43,9 @@ const GrammarAnalysis = () => {
         ll1Description: "",
     });
 
+    const [showTransformedInput, setShowTransformedInput] = useState(false);
+    const [transformedGrammar, setTransformedGrammar] = useState("");
+
     /**
      * Toggle between light and dark theme.
      */
@@ -77,15 +74,19 @@ const GrammarAnalysis = () => {
 
             setIsLoading(true);
             try {
-                const { data } = await axios.post("https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/step", {
-                    analysisType: currentAnalysisType,
-                    stepIndex,
-                    grammar: trimmedGrammar,
-                });
+                const { data } = await axios.post(
+                    "https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/step",
+                    {
+                        analysisType: currentAnalysisType,
+                        stepIndex,
+                        grammar: trimmedGrammar,
+                    }
+                );
 
                 const computedAnalysisData = {
                     dynamicResult: data.partialResult || {},
-                    stepDetails: Object.values(data.currentStepDetails || {}).flat().join("\n"),
+                    stepDetails:
+                        Object.values(data.currentStepDetails || {}).flat().join("\n") || "",
                     ll1Table: data.ll1Table || {},
                     ll1: data.ll1 ?? false,
                     ll1Description: data.ll1Description || "",
@@ -107,7 +108,6 @@ const GrammarAnalysis = () => {
                         totalSteps: data.totalSteps,
                     },
                 }));
-
             } catch (err) {
                 console.error("Error loading step:", err);
             } finally {
@@ -130,8 +130,19 @@ const GrammarAnalysis = () => {
         setCurrentStepIndex(0);
 
         try {
-            await axios.post("https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/analyze", { grammar: grammar.trim() });
+            const { data } = await axios.post(
+                "https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/analyze",
+                { grammar: grammar.trim() }
+            );
+
             await fetchStep(0);
+
+            if (data.transformedGrammar && data.transformedGrammar !== grammar.trim()) {
+                setTransformedGrammar(data.transformedGrammar);
+            } else {
+                setTransformedGrammar("");
+                setShowTransformedInput(false);
+            }
         } catch (err) {
             console.error("Grammar Analysis Error:", err);
             setError("Analysis error. Check your grammar or try again.");
@@ -303,74 +314,82 @@ const GrammarAnalysis = () => {
     return (
         <>
             <MobileBlocker />
-        <div className={`analysis-container ${theme}`}>
-            <Typography variant="h4" className="title">
-                Grammar Analyzer
-            </Typography>
+            <div className={`analysis-container ${theme}`}>
+                <Typography variant="h4" className="title">
+                    Grammar Analyzer
+                </Typography>
 
-            <div className="top-bar-wrapper">
-                <TopBar
-                    currentAnalysisType={currentAnalysisType}
-                    grammar={grammar}
-                    handleAnalysisTypeChange={handleAnalysisTypeChange}
-                />
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <div
-                        className={`theme-toggle ${theme === "dark" ? "active" : ""}`}
-                        onClick={toggleTheme}
-                        title="Toggle theme"
-                    >
-                        {theme === "light" ? <MoonIcon /> : <SunIcon />}
+                <div className="top-bar-wrapper">
+                    <TopBar
+                        currentAnalysisType={currentAnalysisType}
+                        grammar={grammar}
+                        handleAnalysisTypeChange={handleAnalysisTypeChange}
+                    />
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <div
+                            className={`theme-toggle ${theme === "dark" ? "active" : ""}`}
+                            onClick={toggleTheme}
+                            title="Toggle theme"
+                        >
+                            {theme === "light" ? <MoonIcon /> : <SunIcon />}
+                        </div>
+                        <HelpDialog />
                     </div>
-                    <HelpDialog />
                 </div>
-            </div>
 
-            <div className="main-container">
-                <div className="left-panel" style={{ width: `${dividerPos}%` }}>
-                    <GrammarInput grammar={grammar} setGrammar={setGrammar} error={error} />
+                <div className="main-container">
+                    <div className="left-panel" style={{ width: `${dividerPos}%` }}>
+                        <GrammarInput
+                            grammar={showTransformedInput ? transformedGrammar : grammar}
+                            setGrammar={showTransformedInput ? () => {} : setGrammar}
+                            error={error}
+                            readOnly={showTransformedInput}
+                            showTransformedInput={showTransformedInput}
+                            setShowTransformedInput={setShowTransformedInput}
+                            transformedGrammar={transformedGrammar}
+                        />
 
-                    {currentAnalysisType !== "LL1" && (
-                        <>
-                            <Typography variant="h6">{currentAnalysisType} Algorithm</Typography>
-                            <PseudoCodeBlock
-                                pseudoCodeLines={pseudoCodeLines}
-                                pseudoCodeLine={pseudoCodeLine}
+                        {currentAnalysisType !== "LL1" && (
+                            <>
+                                <Typography variant="h6">{currentAnalysisType} Algorithm</Typography>
+                                <PseudoCodeBlock
+                                    pseudoCodeLines={pseudoCodeLines}
+                                    pseudoCodeLine={pseudoCodeLine}
+                                />
+                                <StepDetails stepDetails={analysisData.stepDetails} />
+                            </>
+                        )}
+                    </div>
+
+                    <Divider handleMouseDown={handleMouseDown} />
+
+                    <div className="right-panel" style={{ width: `${100 - dividerPos}%` }}>
+                        {currentAnalysisType !== "LL1" ? (
+                            <ResultDisplay
+                                dynamicResult={analysisData.dynamicResult}
+                                analysisType={currentAnalysisType}
                             />
-                            <StepDetails stepDetails={analysisData.stepDetails} />
-                        </>
-                    )}
-                </div>
+                        ) : (
+                            <LL1TableDisplay
+                                ll1Table={analysisData.ll1Table}
+                                productionRuleList={analysisData.productionRuleList}
+                                productionRuleNumbers={analysisData.productionRuleNumbers}
+                                ll1={analysisData.ll1}
+                            />
+                        )}
 
-                <Divider handleMouseDown={handleMouseDown} />
-
-                <div className="right-panel" style={{ width: `${100 - dividerPos}%` }}>
-                    {currentAnalysisType !== "LL1" ? (
-                        <ResultDisplay
-                            dynamicResult={analysisData.dynamicResult}
-                            analysisType={currentAnalysisType}
-                        />
-                    ) : (
-                        <LL1TableDisplay
-                            ll1Table={analysisData.ll1Table}
-                            productionRuleList={analysisData.productionRuleList}
-                            productionRuleNumbers={analysisData.productionRuleNumbers}
-                            ll1={analysisData.ll1}
-                        />
-                    )}
-
-                    {currentAnalysisType !== "LL1" && (
-                        <Controls
-                            currentStepIndex={currentStepIndex}
-                            isLoading={isLoading}
-                            grammar={grammar}
-                            handleStep={handleStep}
-                            totalSteps={totalSteps}
-                        />
-                    )}
+                        {currentAnalysisType !== "LL1" && (
+                            <Controls
+                                currentStepIndex={currentStepIndex}
+                                isLoading={isLoading}
+                                grammar={grammar}
+                                handleStep={handleStep}
+                                totalSteps={totalSteps}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
         </>
     );
 };

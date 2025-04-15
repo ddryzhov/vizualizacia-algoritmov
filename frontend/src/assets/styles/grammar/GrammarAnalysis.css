@@ -408,3 +408,34 @@ body.dark .theme-toggle:hover {
 .result-box, .step-details, .pseudo-code {
     will-change: contents;
 }
+
+.grammar-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding-right: 10px;
+}
+
+.toggle-btn {
+    background: white;
+    color: #5B9FED;
+    border: 1px solid #CAD7E7;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.toggle-btn:hover:not(:disabled),
+.toggle-btn.active {
+    background: #5B9FED;
+    color: white;
+    box-shadow: 0 4px 8px rgba(97, 175, 239, 0.3);
+}
+
+.toggle-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

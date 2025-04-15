@@ -31,5 +31,7 @@ public class GrammarResponseDto {
 
     private List<String> productionRuleList;
     private Map<String, Integer> productionRuleNumbers;
+
+    private String transformedGrammar;
 }
 
