@@ -439,3 +439,16 @@ body.dark .theme-toggle:hover {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+body.dark .toggle-btn {
+    background: #313540;
+    color: #cdd6f4;
+    border: 1px solid #4b5263;
+}
+
+body.dark .toggle-btn:hover:not(:disabled),
+body.dark .toggle-btn.active {
+    background: #61afef;
+    color: white;
+    box-shadow: 0 4px 8px rgba(97, 175, 239, 0.3);
+}
