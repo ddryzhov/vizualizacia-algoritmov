@@ -154,7 +154,7 @@ public class FirstSetCalculator {
                     // Skip left-recursive production.
                     SetUtils.recordStep(
                             "Step 6: Skipping production " + firstSymbol + " → " + gamma
-                                    + " as it is left-recursive (A is prefix).",
+                                    + " as it is left-recursive (starts with itself).",
                             SetUtils.copySets(firstSets),
                             steps,
                             6
