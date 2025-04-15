@@ -23,8 +23,8 @@ const MobileBlocker = () => {
     return (
         <div className="mobile-blocker">
             <div className="mobile-message">
-                This application is not supported on mobile devices.<br />
-                Please use a desktop or laptop computer.
+                ⚠️ This application is not supported on small screens.<br />
+                Please use a larger display for full functionality.
             </div>
         </div>
     );
