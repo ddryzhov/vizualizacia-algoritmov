@@ -10,6 +10,7 @@ import {
     Box,
     Alert
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import "../../assets/styles/grammar/GrammarAnalysis.css";
 
 /**
@@ -17,6 +18,8 @@ import "../../assets/styles/grammar/GrammarAnalysis.css";
  * Highlights table conflicts and shows rule numbers.
  */
 const LL1TableDisplay = React.memo(({ ll1Table, productionRuleList, productionRuleNumbers, ll1 }) => {
+    const { t } = useTranslation();
+
     const nonTerminals = Object.keys(ll1Table || {});
     if (nonTerminals.length === 0) return null;
 
@@ -30,19 +33,17 @@ const LL1TableDisplay = React.memo(({ ll1Table, productionRuleList, productionRu
 
     return (
         <div className="ll1-table">
-            <Typography variant="h5" gutterBottom>Parse Table</Typography>
+            <Typography variant="h5" gutterBottom>{t("parseTableTitle")}</Typography>
 
             <Alert severity={ll1 ? "success" : "error"} className="ll1-alert">
-                {ll1
-                    ? "✅ Grammar is LL(1): No conflicts in the table."
-                    : "❌ Grammar is NOT LL(1): Conflicts found in the table."}
+                {ll1 ? t("ll1Success") : t("ll1Error")}
             </Alert>
 
             <Paper>
                 <Table className="ll1-inner-table">
                     <TableHead>
                         <TableRow>
-                            <TableCell className="ll1-header">Non-terminal</TableCell>
+                            <TableCell className="ll1-header">{t("nonTerminal")}</TableCell>
                             {terminals.map((term) => (
                                 <TableCell key={term} className="ll1-header">{term}</TableCell>
                             ))}
@@ -77,7 +78,7 @@ const LL1TableDisplay = React.memo(({ ll1Table, productionRuleList, productionRu
             {productionRuleList?.length > 0 && (
                 <Box sx={{ mt: 3 }}>
                     <Typography variant="subtitle1" className="ll1-rules-title">
-                        Grammar Rules:
+                        {t("grammarRules")}
                     </Typography>
                     <ul className="ll1-rule-list">
                         {productionRuleList.map((rule, idx) => (

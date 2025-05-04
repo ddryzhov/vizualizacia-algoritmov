@@ -24,7 +24,6 @@ class Ll1ServiceImplTest {
         grammar.setProductionRuleNumbers(Map.of("S -> 'a'", 1));
         service.buildLL1TableWithSteps(productionRules, predictSets, grammar);
         assertNotNull(grammar.getLl1Table());
-        assertNotNull(grammar.getLl1Description());
         assertTrue(grammar.getLl1Table().containsKey("S"));
     }
 }

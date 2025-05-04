@@ -19,6 +19,9 @@ import Controls from "./Controls";
 import Divider from "./Divider";
 import HelpDialog from "../helpDialog/HelpDialog";
 import { pseudoCodeMapping } from "../utils/PseudoCodeMapping";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../switcher/LanguageSwitcher";
+import api from "../../axiosInstance";
 
 const GrammarAnalysis = () => {
     const [theme, setTheme] = useState("light");
@@ -34,13 +37,13 @@ const GrammarAnalysis = () => {
     const [totalSteps, setTotalSteps] = useState(0);
     const isFirstRenderRef = useRef(true);
     const [lastStepTimestamp, setLastStepTimestamp] = useState(0);
+    const { t } = useTranslation();
 
     const [analysisData, setAnalysisData] = useState({
         dynamicResult: {},
         stepDetails: "",
         ll1Table: {},
         ll1: false,
-        ll1Description: "",
     });
 
     const [showTransformedInput, setShowTransformedInput] = useState(false);
@@ -74,8 +77,8 @@ const GrammarAnalysis = () => {
 
             setIsLoading(true);
             try {
-                const { data } = await axios.post(
-                    "https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/step",
+                const { data } = await api.post(
+                    "/grammar/step",
                     {
                         analysisType: currentAnalysisType,
                         stepIndex,
@@ -89,7 +92,6 @@ const GrammarAnalysis = () => {
                         Object.values(data.currentStepDetails || {}).flat().join("\n") || "",
                     ll1Table: data.ll1Table || {},
                     ll1: data.ll1 ?? false,
-                    ll1Description: data.ll1Description || "",
                     productionRuleList: data.productionRuleList || [],
                     productionRuleNumbers: data.productionRuleNumbers || {},
                 };
@@ -122,7 +124,7 @@ const GrammarAnalysis = () => {
      */
     const fetchAnalysis = useCallback(async () => {
         if (!grammar.trim()) {
-            setError("Grammar cannot be empty!");
+            setError(t("Grammar cannot be empty!"));
             return;
         }
         setIsLoading(true);
@@ -130,8 +132,8 @@ const GrammarAnalysis = () => {
         setCurrentStepIndex(0);
 
         try {
-            const { data } = await axios.post(
-                "https://vizualizacia-algoritmov-production.up.railway.app/api/grammar/analyze",
+            const { data } = await api.post(
+                "/grammar/analyze",
                 { grammar: grammar.trim() }
             );
 
@@ -145,17 +147,19 @@ const GrammarAnalysis = () => {
             }
         } catch (err) {
             console.error("Grammar Analysis Error:", err);
-            setError("Analysis error. Check your grammar or try again.");
+            setError(t("Analysis error. Check your grammar or try again."));
         } finally {
             setIsLoading(false);
         }
-    }, [grammar, fetchStep]);
+    }, [grammar, fetchStep, t]);
 
     /**
      * Update view when analysis type changes (FIRST, FOLLOW, etc).
      * Uses cached result if available.
      */
     useEffect(() => {
+        setPseudoCodeLine(0);
+
         if (!grammar.trim()) {
             setCachedResults({});
             setAnalysisData({
@@ -163,7 +167,6 @@ const GrammarAnalysis = () => {
                 stepDetails: "",
                 ll1Table: {},
                 ll1: false,
-                ll1Description: "",
             });
             setCurrentStepIndex(0);
             setPseudoCodeLine(0);
@@ -184,7 +187,6 @@ const GrammarAnalysis = () => {
                 stepDetails: cached.stepDetails,
                 ll1Table: cached.ll1Table,
                 ll1: cached.ll1 ?? false,
-                ll1Description: cached.ll1Description,
                 productionRuleList: cached.productionRuleList || [],
                 productionRuleNumbers: cached.productionRuleNumbers || {},
             });
@@ -210,7 +212,6 @@ const GrammarAnalysis = () => {
                 stepDetails: "",
                 ll1Table: {},
                 ll1: false,
-                ll1Description: "",
             });
             setCurrentStepIndex(0);
             setPseudoCodeLine(0);
@@ -228,12 +229,12 @@ const GrammarAnalysis = () => {
         setLastStepTimestamp(now);
 
         if (stepIndex === 0 && !grammar.trim()) {
+            setError(null);
             setAnalysisData({
                 dynamicResult: {},
                 stepDetails: "",
                 ll1Table: {},
                 ll1: false,
-                ll1Description: "",
             });
             setCurrentStepIndex(0);
             setPseudoCodeLine(0);
@@ -255,7 +256,6 @@ const GrammarAnalysis = () => {
                 stepDetails: analysisData.stepDetails,
                 ll1Table: analysisData.ll1Table,
                 ll1: analysisData.ll1,
-                ll1Description: analysisData.ll1Description,
                 productionRuleList: analysisData.productionRuleList,
                 productionRuleNumbers: analysisData.productionRuleNumbers,
                 stepIndex: currentStepIndex,
@@ -315,25 +315,23 @@ const GrammarAnalysis = () => {
         <>
             <MobileBlocker />
             <div className={`analysis-container ${theme}`}>
-                <Typography variant="h4" className="title">
-                    Grammar Analyzer
-                </Typography>
-
                 <div className="top-bar-wrapper">
                     <TopBar
                         currentAnalysisType={currentAnalysisType}
                         grammar={grammar}
                         handleAnalysisTypeChange={handleAnalysisTypeChange}
+                        error={error}
                     />
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <div
                             className={`theme-toggle ${theme === "dark" ? "active" : ""}`}
                             onClick={toggleTheme}
-                            title="Toggle theme"
+                            title={t("Toggle theme")}
                         >
                             {theme === "light" ? <MoonIcon /> : <SunIcon />}
                         </div>
                         <HelpDialog />
+                        <LanguageSwitcher />
                     </div>
                 </div>
 
@@ -353,6 +351,7 @@ const GrammarAnalysis = () => {
                             <>
                                 <Typography variant="h6">{currentAnalysisType} Algorithm</Typography>
                                 <PseudoCodeBlock
+                                    key={currentAnalysisType}
                                     pseudoCodeLines={pseudoCodeLines}
                                     pseudoCodeLine={pseudoCodeLine}
                                 />
@@ -385,6 +384,7 @@ const GrammarAnalysis = () => {
                                 grammar={grammar}
                                 handleStep={handleStep}
                                 totalSteps={totalSteps}
+                                error={error}
                             />
                         )}
                     </div>

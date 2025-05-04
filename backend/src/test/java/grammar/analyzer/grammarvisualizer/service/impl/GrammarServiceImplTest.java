@@ -61,7 +61,6 @@ class GrammarServiceImplTest {
     void testGetStepLL1() {
         Grammar grammar = new Grammar();
         grammar.setLl1Table(Map.of("S", Map.of("$", "R1")));
-        grammar.setLl1Description("LL1 description");
         grammar.setLl1(true);
         grammar.setProductionRuleNumbers(Map.of("S -> 'a'", 1));
         grammar.setFirstStepRecords(List.of(new StepRecord("Step",
@@ -74,7 +73,6 @@ class GrammarServiceImplTest {
         GrammarResponseDto response = grammarService.getStep("LL1",
                 0, "S -> 'a'");
 
-        assertEquals("LL1 description", response.getLl1Description());
         assertTrue(response.isLl1());
         assertEquals(0, response.getCurrentStepIndex());
         assertEquals(1, response.getTotalSteps());

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Ll1ServiceImpl implements LL1Service {
     /**
-     * Builds the LL(1) table and generates a descriptive log using the PREDICT sets.
+     * Builds the LL(1) table using the PREDICT sets.
      *
      * @param productionRules the grammar production rules
      * @param predictSets     the computed PREDICT sets for each production
@@ -30,21 +30,14 @@ public class Ll1ServiceImpl implements LL1Service {
         Map<String, Map<String, String>> ll1Table = LL1TableUtils
                 .initializeLl1Table(productionRules);
         boolean isLL1 = true;
-        StringBuilder description = new StringBuilder("LL(1) table is built "
-                + "using PREDICT sets:\n\n");
 
         // Process each non-terminal.
         for (String nonTerminal : productionRules.keySet()) {
-            description.append("For non-terminal ").append(nonTerminal).append(":\n");
             for (String production : productionRules.get(nonTerminal)) {
                 String rule = nonTerminal + " -> " + production;
                 int ruleNumber = grammar.getProductionRuleNumbers().get(rule);
                 String ruleLabel = "R" + ruleNumber;
                 Set<String> predictSet = predictSets.get(rule);
-
-                description.append("  ").append(ruleLabel).append(": ")
-                        .append(rule).append(", PREDICT = ")
-                        .append(predictSet).append("\n");
 
                 // Update the LL(1) table for each terminal in the PREDICT set.
                 for (String terminal : predictSet) {
@@ -57,12 +50,10 @@ public class Ll1ServiceImpl implements LL1Service {
                     }
                 }
             }
-            description.append("\n");
         }
 
-        // Set the LL(1) table and description in the grammar.
+        // Set the LL(1) table in the grammar.
         grammar.setLl1Table(ll1Table);
         grammar.setLl1(isLL1);
-        grammar.setLl1Description(description.toString());
     }
 }

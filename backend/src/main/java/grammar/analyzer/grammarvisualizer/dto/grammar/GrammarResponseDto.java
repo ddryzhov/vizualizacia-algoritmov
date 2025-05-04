@@ -19,7 +19,6 @@ public class GrammarResponseDto {
     private Map<String, List<String>> productionRules;
 
     private Map<String, Map<String, String>> ll1Table;
-    private String ll1Description;
 
     private Map<String, Set<String>> partialResult;
     private Map<String, List<String>> currentStepDetails;

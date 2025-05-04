@@ -45,9 +45,6 @@ class GrammarTest {
         grammar.setPredictStepRecords(predictStepRecords);
         assertSame(predictStepRecords, grammar.getPredictStepRecords());
 
-        grammar.setLl1Description("desc");
-        assertEquals("desc", grammar.getLl1Description());
-
         Map<String, Map<String, String>> ll1Table = new HashMap<>();
         grammar.setLl1Table(ll1Table);
         assertSame(ll1Table, grammar.getLl1Table());

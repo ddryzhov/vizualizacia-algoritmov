@@ -24,7 +24,6 @@ public class Grammar {
     private List<StepRecord> followStepRecords;
     private List<StepRecord> predictStepRecords;
 
-    private String ll1Description;
     private Map<String, Map<String, String>> ll1Table;
     private boolean ll1;
 

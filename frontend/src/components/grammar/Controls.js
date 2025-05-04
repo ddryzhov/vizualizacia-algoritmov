@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 
 /**
  * Renders step control buttons: PREV, NEXT, RESET, RESULT.
- * Enables or disables buttons based on step index and loading state.
+ * Enables or disables buttons based on step index, loading state, grammar and errors.
  */
 const Controls = React.memo(({
                                  currentStepIndex,
@@ -11,12 +11,15 @@ const Controls = React.memo(({
                                  grammar,
                                  handleStep,
                                  totalSteps,
+                                 error,
                              }) => {
     const isGrammarEmpty = grammar.trim() === "";
-    const disabledPrev = currentStepIndex <= 0 || isLoading || isGrammarEmpty;
-    const disabledNext = currentStepIndex >= totalSteps - 1 || isLoading || isGrammarEmpty;
-    const disabledReset = isLoading || isGrammarEmpty;
-    const disabledResult = currentStepIndex >= totalSteps - 1 || isLoading || isGrammarEmpty;
+    const hasError = Boolean(error);
+
+    const disabledPrev = currentStepIndex <= 0 || isLoading || isGrammarEmpty || hasError;
+    const disabledNext = currentStepIndex >= totalSteps - 1 || isLoading || isGrammarEmpty || hasError;
+    const disabledReset = isLoading || isGrammarEmpty || hasError;
+    const disabledResult = currentStepIndex >= totalSteps - 1 || isLoading || isGrammarEmpty || hasError;
 
     return (
         <div className="controls">

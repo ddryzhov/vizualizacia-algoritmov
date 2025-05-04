@@ -1,5 +1,6 @@
 package grammar.analyzer.grammarvisualizer.service.ebnf.parser;
 
+import grammar.analyzer.grammarvisualizer.exception.GrammarSyntaxException;
 import grammar.analyzer.grammarvisualizer.service.ebnf.model.ast.AlternativeNode;
 import grammar.analyzer.grammarvisualizer.service.ebnf.model.ast.EbnfNode;
 import grammar.analyzer.grammarvisualizer.service.ebnf.model.ast.NonTerminalNode;
@@ -92,23 +93,23 @@ public class EbnfParser {
         } else if (match(TokenType.LPAREN)) {
             EbnfNode node = parseExpression();
             if (!match(TokenType.RPAREN)) {
-                throw new RuntimeException("Expected ')' token");
+                throw new GrammarSyntaxException("Expected ')' token");
             }
             return node;
         } else if (match(TokenType.LBRACKET)) {
             EbnfNode node = parseExpression();
             if (!match(TokenType.RBRACKET)) {
-                throw new RuntimeException("Expected ']' token");
+                throw new GrammarSyntaxException("Expected ']' token");
             }
             return new OptionalNode(node);
         } else if (match(TokenType.LBRACE)) {
             EbnfNode node = parseExpression();
             if (!match(TokenType.RBRACE)) {
-                throw new RuntimeException("Expected '}' token");
+                throw new GrammarSyntaxException("Expected '}' token");
             }
             return new RepetitionNode(node);
         } else {
-            throw new RuntimeException("Unexpected token: " + t);
+            throw new GrammarSyntaxException("Unexpected token: " + t);
         }
     }
 }

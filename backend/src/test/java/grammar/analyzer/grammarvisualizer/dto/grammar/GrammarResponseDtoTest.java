@@ -39,9 +39,6 @@ class GrammarResponseDtoTest {
         dto.setLl1Table(ll1Table);
         assertSame(ll1Table, dto.getLl1Table());
 
-        dto.setLl1Description("LL1 desc");
-        assertEquals("LL1 desc", dto.getLl1Description());
-
         Map<String, Set<String>> partialResult = new HashMap<>();
         dto.setPartialResult(partialResult);
         assertSame(partialResult, dto.getPartialResult());

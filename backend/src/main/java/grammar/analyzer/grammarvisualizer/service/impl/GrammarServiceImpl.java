@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -30,13 +29,11 @@ public class GrammarServiceImpl implements GrammarService {
     private final GrammarParserService grammarParserService;
     private final FirstFollowPredictService firstFollowPredictService;
     private final LL1Service ll1Service;
-
     /**
      * -- GETTER --
      *  For test purposes only.
      * -- SETTER --
      *  For test purposes only.
-
      */
     @Setter
     @Getter
@@ -71,11 +68,10 @@ public class GrammarServiceImpl implements GrammarService {
 
         if ("LL1".equalsIgnoreCase(analysisType)) {
             response.setLl1Table(currentGrammar.getLl1Table());
-            response.setLl1Description(currentGrammar.getLl1Description());
             response.setLl1(currentGrammar.isLl1());
             response.setCurrentStepDetails(Map.of("details",
                     List.of("LL(1) table and PREDICT rules shown below.")));
-            response.setTotalSteps(1); // LL1 всегда один шаг
+            response.setTotalSteps(1);
             response.setCurrentStepIndex(0);
         } else {
             List<StepRecord> stepRecords = getStepRecordsForType(analysisType, currentGrammar);

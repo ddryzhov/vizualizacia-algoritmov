@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { Typography, Paper } from "@mui/material";
+import {useTranslation} from "react-i18next";
 
 /**
  * Displays the current dynamic result (FIRST/FOLLOW/PREDICT set).
@@ -20,11 +21,12 @@ const ResultDisplay = React.memo(({ dynamicResult, analysisType }) => {
         return res;
     }, [dynamicResult]);
 
+    const { t } = useTranslation();
     const hasData = Object.keys(grouped).length > 0;
 
     return (
         <>
-            <Typography variant="h6">Result</Typography>
+            <Typography variant="h6">{t("Result")}</Typography>
             <Paper className="result-box">
                 {hasData ? (
                     Object.entries(grouped).map(([lhs, valueSet]) => {
@@ -41,7 +43,7 @@ const ResultDisplay = React.memo(({ dynamicResult, analysisType }) => {
                         );
                     })
                 ) : (
-                    <Typography>No data available</Typography>
+                    <Typography>{t("No data available")}</Typography>
                 )}
             </Paper>
         </>
