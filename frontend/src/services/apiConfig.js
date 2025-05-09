@@ -1,3 +1,4 @@
+// Returns the appropriate API base URL depending on the current environment
 export function getApiBaseUrl() {
     const { protocol, hostname, port } = window.location;
 

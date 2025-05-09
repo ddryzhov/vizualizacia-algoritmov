@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getApiBaseUrl } from "./components/utils/apiConfig";
+import { getApiBaseUrl } from "./apiConfig";
 
 const API_BASE = getApiBaseUrl();
 

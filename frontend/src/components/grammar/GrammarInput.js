@@ -3,6 +3,7 @@ import { Typography, Alert, Button } from "@mui/material";
 import debounce from "lodash.debounce";
 import { useTranslation } from "react-i18next";
 
+// GrammarInput component for entering or uploading a grammar in BNF or EBNF format
 const GrammarInput = React.memo(
     ({
          grammar,
@@ -83,7 +84,7 @@ const GrammarInput = React.memo(
                                     onChange={handleFileUpload}
                                 />
                                 <label htmlFor="upload-grammar">
-                                    <Button variant="outlined" component="span" size="small">
+                                    <Button variant="outlined" component="span" size="small" className="toggle-btn">
                                         {t("Upload .txt")}
                                     </Button>
                                 </label>

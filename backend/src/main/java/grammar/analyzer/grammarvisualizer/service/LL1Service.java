@@ -9,7 +9,7 @@ import java.util.Set;
  * Interface for building the LL(1) table with detailed steps.
  */
 public interface LL1Service {
-    void buildLL1TableWithSteps(
+    void buildLl1Table(
             Map<String, List<String>> productionRules,
             Map<String, Set<String>> predictSets,
             Grammar grammar

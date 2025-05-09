@@ -132,7 +132,7 @@ public class GrammarServiceImpl implements GrammarService {
         firstFollowPredictService.computePredictSets(grammar.getProductionRules(),
                 grammar.getFirstSets(), grammar.getFollowSets(), grammar);
 
-        ll1Service.buildLL1TableWithSteps(grammar.getProductionRules(),
+        ll1Service.buildLl1Table(grammar.getProductionRules(),
                 grammar.getPredictSets(), grammar);
 
         return grammar;

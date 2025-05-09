@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import CloseIcon from "@mui/icons-material/Close";
-import "../../assets/styles/helpDialog/HelpDialog.css";
+import "../../assets/styles/help/HelpDialog.css";
 import {useTranslation} from "react-i18next";
 
 const TabPanel = ({ children, value, index }) => (
@@ -20,6 +20,7 @@ const TabPanel = ({ children, value, index }) => (
     </div>
 );
 
+// HelpDialog component provides user guidance through a tabbed dialog window
 const HelpDialog = () => {
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState(0);

@@ -21,7 +21,7 @@ public class Ll1ServiceImpl implements LL1Service {
      * @param grammar         the grammar object to store the LL(1) table and related info
      */
     @Override
-    public void buildLL1TableWithSteps(
+    public void buildLl1Table(
             Map<String, List<String>> productionRules,
             Map<String, Set<String>> predictSets,
             Grammar grammar

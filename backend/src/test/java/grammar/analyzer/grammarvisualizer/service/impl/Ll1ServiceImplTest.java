@@ -22,7 +22,7 @@ class Ll1ServiceImplTest {
         Grammar grammar = new Grammar();
         Ll1ServiceImpl service = new Ll1ServiceImpl();
         grammar.setProductionRuleNumbers(Map.of("S -> 'a'", 1));
-        service.buildLL1TableWithSteps(productionRules, predictSets, grammar);
+        service.buildLl1Table(productionRules, predictSets, grammar);
         assertNotNull(grammar.getLl1Table());
         assertTrue(grammar.getLl1Table().containsKey("S"));
     }

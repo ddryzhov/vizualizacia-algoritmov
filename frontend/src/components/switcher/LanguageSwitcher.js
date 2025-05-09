@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ButtonGroup, Button } from "@mui/material";
 import "../../assets/styles/switcher/LanguageSwitcher.css";
 
+// LanguageSwitcher component allows switching between English and Slovak
 const LanguageSwitcher = () => {
     const { i18n } = useTranslation();
 

@@ -1,6 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+// Translation resources for English and Slovak
 const resources = {
     en: {
         translation: {
@@ -40,8 +41,8 @@ const resources = {
             "ASCII Symbol": "ASCII Symbol",
             "Displayed as": "Displayed as",
             "parseTableTitle": "Parse Table",
-            "ll1Success": "✅ Grammar is LL(1): No conflicts in the table.",
-            "ll1Error": "❌ Grammar is NOT LL(1): Conflicts found in the table.",
+            "ll1Success": "Grammar is LL(1): No conflicts in the table.",
+            "ll1Error": "Grammar is NOT LL(1): Conflicts found in the table.",
             "nonTerminal": "Non-terminal",
             "grammarRules": "Grammar Rules",
             "Upload .txt": "Upload .txt"
@@ -84,9 +85,9 @@ const resources = {
             "TeX Notation": "TeX notácia",
             "ASCII Symbol": "ASCII symbol",
             "Displayed as": "Zobrazené ako",
-            "parseTableTitle": "LL(1) tabuľka",
-            "ll1Success": "✅ Gramatika je LL(1): V tabuľke nie sú žiadne konflikty.",
-            "ll1Error": "❌ Gramatika nie je LL(1): V tabuľke sa nachádzajú konflikty.",
+            "parseTableTitle": "Parsovacia tabuľka",
+            "ll1Success": "Gramatika je LL(1): V tabuľke nie sú žiadne konflikty.",
+            "ll1Error": "Gramatika nie je LL(1): V tabuľke sa nachádzajú konflikty.",
             "nonTerminal": "Neterminál",
             "grammarRules": "Pravidlá gramatiky",
             "Upload .txt": "Nahrať .txt súbor"

@@ -17,11 +17,11 @@ import ResultDisplay from "./ResultDisplay";
 import LL1TableDisplay from "./LL1TableDisplay";
 import Controls from "./Controls";
 import Divider from "./Divider";
-import HelpDialog from "../helpDialog/HelpDialog";
-import { pseudoCodeMapping } from "../utils/PseudoCodeMapping";
+import HelpDialog from "../help/HelpDialog";
+import { pseudoCodeMapping } from "../../utils/PseudoCodeMapping";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../switcher/LanguageSwitcher";
-import api from "../../axiosInstance";
+import api from "../../services/axiosInstance";
 
 const GrammarAnalysis = () => {
     const [theme, setTheme] = useState("light");
