@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useEffect, useRef, useState } from "react";
 import { Typography } from "@mui/material";
-import axios from "axios";
 import throttle from "lodash.throttle";
+import { mapBackendErrorToTranslation } from "../../utils/errorMapper";
 
 import "../../assets/styles/grammar/GrammarAnalysis.css";
 
@@ -112,6 +112,13 @@ const GrammarAnalysis = () => {
                 }));
             } catch (err) {
                 console.error("Error loading step:", err);
+                const serverErrors = err.response?.data?.errors;
+                if (Array.isArray(serverErrors) && serverErrors.length > 0) {
+                    const translated = serverErrors.map((msg) => mapBackendErrorToTranslation(msg, t));
+                    setError(translated.join("; "));
+                } else {
+                    setError(t("analysisError"));
+                }
             } finally {
                 setIsLoading(false);
             }
@@ -147,10 +154,17 @@ const GrammarAnalysis = () => {
             }
         } catch (err) {
             console.error("Grammar Analysis Error:", err);
-            setError(t("Analysis error. Check your grammar or try again."));
+            const serverErrors = err.response?.data?.errors;
+            if (Array.isArray(serverErrors) && serverErrors.length > 0) {
+                const translated = serverErrors.map((msg) => mapBackendErrorToTranslation(msg, t));
+                setError(translated.join("; "));
+            } else {
+                setError(t("analysisError"));
+            }
         } finally {
             setIsLoading(false);
         }
+
     }, [grammar, fetchStep, t]);
 
     /**

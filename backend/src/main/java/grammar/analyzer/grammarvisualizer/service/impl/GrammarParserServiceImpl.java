@@ -86,6 +86,33 @@ public class GrammarParserServiceImpl implements GrammarParserService {
             }
         }
 
+        List<String> defined = new ArrayList<>(productionRules.keySet());
+        List<String> used    = new ArrayList<>();
+
+        for (List<String> prods : productionRules.values()) {
+            for (String prod : prods) {
+                for (String sym : prod.trim().split("\\s+")) {
+                    boolean isTerminal = sym.startsWith("'") && sym.endsWith("'");
+                    boolean isEpsilon  = "epsilon".equals(sym);
+                    boolean isOperator = "|".equals(sym) || "->".equals(sym);
+                    if (!isTerminal && !isEpsilon && !isOperator) {
+                        used.add(sym);
+                    }
+                }
+            }
+        }
+
+        List<String> undefined = used.stream()
+                .distinct()
+                .filter(sym -> !defined.contains(sym))
+                .toList();
+
+        if (!undefined.isEmpty()) {
+            throw new GrammarSyntaxException(
+                    "Undefined non-terminal(s): " + String.join(", ", undefined)
+            );
+        }
+
         // Return the parsed production rules
         return productionRules;
     }

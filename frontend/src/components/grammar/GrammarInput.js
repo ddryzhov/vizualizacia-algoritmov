@@ -99,7 +99,7 @@ const GrammarInput = React.memo(
                     className="grammar-input"
                     value={localGrammar}
                     onChange={readOnly ? undefined : handleGrammarChange}
-                    placeholder={`Example:\nS -> 'a' A | 'b' B\nA -> 'c' | epsilon\nB -> 'd'`}
+                    placeholder={t("grammarExamplePlaceholder")}
                     rows={10}
                     readOnly={readOnly}
                 />

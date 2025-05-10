@@ -88,22 +88,60 @@ const HelpDialog = () => {
                     </TabPanel>
 
                     <TabPanel value={tab} index={1}>
-                        <Typography variant="h6">{t("Grammar Input Examples")}</Typography>
-                        <Typography variant="body2">
-                            {t("You can use standard or EBNF grammar syntax, for example:")}
+                        <Typography variant="h6">{t("Grammar Input Rules")}</Typography>
+                        <Typography variant="body2" sx={{ mb: 2 }}>
+                            {t("When writing grammar, follow these basic rules to ensure correct parsing and visualization:")}
+                        </Typography>
+
+                        <ul>
+                            <li>
+                                <strong>{t("Non-terminals")}:</strong> {t("Write as capitalized names without quotes (e.g.")} <code>S</code>, <code>Expr</code>, <code>Factor</code>{t(").")}
+                            </li>
+                            <li>
+                                <strong>{t("Terminals")}:</strong> {t("Wrap in single quotes (e.g.")} <code>'a'</code>, <code>'+'</code>, <code>'('</code>{t(").")}
+                            </li>
+                            <li>
+                                <strong>{t("Separators")}:</strong> {t("Use exactly one space between all symbols (non-terminals, terminals, arrows, pipes, etc.).")}
+                            </li>
+                            <li>
+                                <strong>{t("Arrows")}:</strong> <code>-></code> {t("denotes a production (use ASCII dash and angle bracket).")}
+                            </li>
+                            <li>
+                                <strong>{t("Alternatives")}:</strong> <code>|</code> {t("is used to separate multiple production options.")}
+                            </li>
+                            <li>
+                                <strong>{t("Empty string")}:</strong> <code>epsilon</code> {t("is used to represent the empty production.")}
+                            </li>
+                        </ul>
+
+                        <Typography variant="h6" sx={{ mt: 3 }}>
+                            {t("Correct Examples")}
                         </Typography>
                         <Box component="pre" className="code-block">
                             {`S -> 'a' A | 'b' B
 A -> 'c' | epsilon
-B -> 'd'
-
-EBNF example:
-S -> 'a' [ 'b' ] { 'c' | 'd' }`}
+B -> 'd'`}
                         </Box>
+
+                        <Typography variant="h6" sx={{ mt: 3 }}>
+                            {t("EBNF Example")}
+                        </Typography>
+                        <Box component="pre" className="code-block">
+                            {`S -> 'a' [ 'b' ] { 'c' | 'd' }`}
+                        </Box>
+
+                        <Typography variant="body2" sx={{ mt: 2 }}>
+                            {t("All symbols must be separated by spaces, exactly as shown above. Incorrect spacing or missing quotes may lead to parser errors.")}
+                        </Typography>
                     </TabPanel>
 
                     <TabPanel value={tab} index={2}>
                         <Typography variant="h6">{t("Special Symbols (TeX notation)")}</Typography>
+
+                        <Typography variant="body2" sx={{ mb: 2 }}>
+                            {t("In some examples or outputs, special symbols are shown using TeX or ASCII notation. This allows for a clearer and more consistent representation of grammar rules. You can write grammars using plain symbols like -> or |, or their LaTeX-style equivalents shown below.")}
+                        </Typography>
+
                         <table className="symbols-table">
                             <thead>
                             <tr>
@@ -130,6 +168,10 @@ S -> 'a' [ 'b' ] { 'c' | 'd' }`}
                             </tr>
                             </tbody>
                         </table>
+
+                        <Typography variant="body2" sx={{ mt: 2 }}>
+                            {t("You may use these notations for better readability or in theoretical descriptions, but in the grammar input field always write the ASCII versions with spaces, like:")} <code>S -> 'a' A | epsilon</code>
+                        </Typography>
                     </TabPanel>
                 </DialogContent>
             </Dialog>
