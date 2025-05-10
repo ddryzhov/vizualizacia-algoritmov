@@ -168,10 +168,6 @@ B -> 'd'`}
                             </tr>
                             </tbody>
                         </table>
-
-                        <Typography variant="body2" sx={{ mt: 2 }}>
-                            {t("You may use these notations for better readability or in theoretical descriptions, but in the grammar input field always write the ASCII versions with spaces, like:")} <code>S -> 'a' A | epsilon</code>
-                        </Typography>
                     </TabPanel>
                 </DialogContent>
             </Dialog>
