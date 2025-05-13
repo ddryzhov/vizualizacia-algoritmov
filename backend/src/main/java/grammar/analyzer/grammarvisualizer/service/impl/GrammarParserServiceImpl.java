@@ -10,72 +10,68 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service implementation for parsing grammar definitions into production maps.
+ * Supports EBNF syntax by transforming constructs into BNF before parsing.
+ */
 @RequiredArgsConstructor
 @Service
 public class GrammarParserServiceImpl implements GrammarParserService {
     private final EbnfTransformerService ebnfTransformerService;
 
     /**
-     * Parse the given grammar input into a map of production rules.
-     * This method takes a string representation of a grammar,
-     * where each rule is separated by a newline,
-     * and converts it into a map with non-terminals as keys
-     * and their respective productions as values.
+     * Parses a grammar input string into a map of non-terminals to their production lists.
+     * Applies EBNF-to-BNF transformation if EBNF constructs are detected.
+     * Validates syntax and throws GrammarSyntaxException on errors.
      *
-     * The grammar syntax is validated, and any violations result in a GrammarSyntaxException.
-     *
-     * @param grammarInput the input string representing the grammar
-     * @return a map where keys are non-terminals, and values are lists of productions
-     * @throws GrammarSyntaxException if the input grammar has invalid syntax
+     * @param grammarInput multiline string with grammar rules separated by newlines
+     * @return ordered map of non-terminal keys and lists of production alternatives
+     * @throws GrammarSyntaxException if grammar syntax is invalid or undefined non-terminals exist
      */
     @Override
     public Map<String, List<String>> parseGrammar(String grammarInput) {
+        // Detect and transform EBNF constructs ({}, [], ()) to BNF
         if (grammarInput.contains("{") || grammarInput.contains("[")
                 || grammarInput.contains("(")
         ) {
             grammarInput = ebnfTransformerService.transform(grammarInput);
         }
 
-        // Initialize a map to store production rules
+        // Normalize escape sequences and delimiter symbols
         grammarInput = grammarInput
                 .replace("\\eps", "epsilon")
                 .replace("\\to", "->")
                 .replace("\\mid", "|");
 
-        // Split input into individual rules by newline
+        // Split input into individual rule lines
         String[] rules = grammarInput.split("\n");
         Map<String, List<String>> productionRules = new LinkedHashMap<>();
 
-        // Iterate over each rule in the input
+        // Process each rule line
         for (String rule : rules) {
-            // Ensure the rule contains the production operator "->"
             if (!rule.contains("->")) {
                 throw new GrammarSyntaxException("Invalid syntax: each rule "
                         + "must contain '->'. Rule: " + rule);
             }
 
-            // Split the rule into the left-hand side (non-terminal)
-            // and right-hand side (productions)
             String[] parts = rule.split("->");
             if (parts.length != 2) {
                 throw new GrammarSyntaxException("Invalid syntax: exactly one '->' "
                         + "expected in each rule. Rule: " + rule);
             }
 
-            // Extract and validate the non-terminal on the left-hand side
+            // Extract and validate non-terminal on LHS
             String nonTerminal = parts[0].trim();
             if (nonTerminal.isEmpty() || !nonTerminal.matches("[A-Za-z_][A-Za-z0-9_']*")) {
                 throw new GrammarSyntaxException("Invalid syntax: left-hand side of the rule "
                         + "must be a valid non-terminal (e.g., A, S', Expr). Rule: " + rule);
             }
 
-            // Split the right-hand side into alternatives by "|"
+            // Split RHS into alternatives and collect productions
             String[] alternatives = parts[1].trim().split("\\|", -1);
-            // Retrieve or initialize the list of productions for the current non-terminal
             List<String> currentProductions = productionRules
                     .computeIfAbsent(nonTerminal, k -> new ArrayList<>());
 
-            // Process each alternative production
             for (String alternative : alternatives) {
                 String trimmed = alternative.trim();
                 if (trimmed.isEmpty()) {
@@ -86,6 +82,7 @@ public class GrammarParserServiceImpl implements GrammarParserService {
             }
         }
 
+        // Collect defined non-terminals and used symbols
         List<String> defined = new ArrayList<>(productionRules.keySet());
         List<String> used    = new ArrayList<>();
 
@@ -102,6 +99,7 @@ public class GrammarParserServiceImpl implements GrammarParserService {
             }
         }
 
+        // Identify any undefined non-terminals
         List<String> undefined = used.stream()
                 .distinct()
                 .filter(sym -> !defined.contains(sym))
@@ -113,7 +111,6 @@ public class GrammarParserServiceImpl implements GrammarParserService {
             );
         }
 
-        // Return the parsed production rules
         return productionRules;
     }
 }

@@ -3,7 +3,8 @@ package grammar.analyzer.grammarvisualizer.dto.grammar;
 import lombok.Data;
 
 /**
- * DTO for a grammar analysis step request.
+ * Data Transfer Object for requesting a specific step
+ * in the grammar analysis process.
  */
 @Data
 public class GrammarStepRequestDto {

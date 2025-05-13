@@ -6,14 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple lexer that tokenizes an EBNF grammar input string.
+ * Lexer for EBNF grammar strings. Splits input into tokens representing
+ * parentheses, brackets, braces, pipes, literals, identifiers, and end-of-input.
  */
 public class EbnfLexer {
+    /**
+     * Tokenizes the given EBNF input string into a list of Token objects.
+     * Skips whitespace and handles single-quoted literals and identifiers.
+     *
+     * @param input raw EBNF grammar string
+     * @return list of tokens ending with an END token
+     */
     public static List<Token> tokenize(String input) {
         List<Token> tokens = new ArrayList<>();
         int i = 0;
         while (i < input.length()) {
             char c = input.charAt(i);
+            // Skip whitespace
             if (Character.isWhitespace(c)) {
                 i++;
                 continue;
@@ -32,12 +41,13 @@ public class EbnfLexer {
                     while (i < input.length() && input.charAt(i) != '\'') {
                         literal.append(input.charAt(i++));
                     }
-                    i++;
+                    i++; // Consume closing quote
                     tokens.add(new Token(TokenType.IDENTIFIER, "'" + literal + "'"));
                     continue;
                 }
-                default -> {
+                default -> { // Unquoted identifier
                     int start = i;
+                    // Consume until whitespace or special symbol
                     while (i < input.length() && !Character.isWhitespace(input.charAt(i))
                             && "()[]{}|".indexOf(input.charAt(i)) == -1) {
                         i++;
@@ -48,6 +58,7 @@ public class EbnfLexer {
             }
             i++;
         }
+        // Append end-of-input marker
         tokens.add(new Token(TokenType.END, ""));
         return tokens;
     }

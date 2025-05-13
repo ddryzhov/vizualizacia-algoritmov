@@ -6,9 +6,16 @@ import grammar.analyzer.grammarvisualizer.model.Grammar;
 import org.mapstruct.Mapper;
 
 /**
- * Mapper for converting Grammar entities to DTOs.
+ * MapStruct mapper interface for converting Grammar entities
+ * into their corresponding DTO representations.
  */
 @Mapper(config = MapperConfig.class)
 public interface GrammarMapper {
+    /**
+     * Maps a Grammar domain model object to a GrammarResponseDto.
+     *
+     * @param grammar the Grammar entity to convert
+     * @return the populated GrammarResponseDto
+     */
     GrammarResponseDto toDto(Grammar grammar);
 }

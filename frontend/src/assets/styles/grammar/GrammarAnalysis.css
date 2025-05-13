@@ -1,6 +1,6 @@
-/* ===========================
-   GLOBAL LAYOUT & BASE STYLE
-=========================== */
+/* ---------------------------
+   Global layout and base styles
+--------------------------- */
 html, body {
     margin: 0;
     padding: 0;
@@ -17,9 +17,9 @@ html, body {
     font-family: "Roboto", sans-serif;
 }
 
-/* ===========================
-   TOP BAR + TABS
-=========================== */
+/* ---------------------------
+   Top bar and tab buttons
+--------------------------- */
 .top-bar-wrapper {
     display: flex;
     align-items: center;
@@ -73,9 +73,9 @@ html, body {
     transition: transform 0.1s ease;
 }
 
-/* ===========================
-   MAIN PANEL LAYOUT
-=========================== */
+/* ---------------------------
+   Main panel layout
+--------------------------- */
 .main-container {
     display: flex;
     flex-grow: 1;
@@ -99,9 +99,9 @@ html, body {
     border: 2px solid transparent;
 }
 
-/* ===========================
-   DRAG DIVIDER
-=========================== */
+/* ---------------------------
+   Resizable divider
+--------------------------- */
 .divider {
     width: 6px;
     background: #b0c8e8;
@@ -114,9 +114,9 @@ html, body {
     background: #61afef;
 }
 
-/* ===========================
-   GRAMMAR INPUT AREA
-=========================== */
+/* ---------------------------
+   Grammar input textarea
+--------------------------- */
 .grammar-input {
     width: 100%;
     flex-grow: 1;
@@ -141,9 +141,9 @@ html, body {
     box-shadow: 0 4px 8px rgba(97, 175, 239, 0.2);
 }
 
-/* ===========================
-   PSEUDO CODE AREA
-=========================== */
+/* ---------------------------
+   Pseudocode display area
+--------------------------- */
 .pseudo-code {
     padding: 12px;
     background: #f0f4fc;
@@ -161,9 +161,9 @@ html, body {
     transition: background 0.3s ease-in-out;
 }
 
-/* ===========================
-   ANALYSIS RESULT OUTPUT
-=========================== */
+/* ---------------------------
+   Analysis results output
+--------------------------- */
 .result-box {
     flex-grow: 1;
     background: #F0F4FC;
@@ -176,9 +176,9 @@ html, body {
     gap: 10px;
 }
 
-/* ===========================
-   STEP DETAILS
-=========================== */
+/* ---------------------------
+   Step details panel
+--------------------------- */
 .step-details {
     background: #f0f4fc;
     padding: 10px;
@@ -203,17 +203,40 @@ html, body {
     letter-spacing: 0.5px;
 }
 
-/* ===========================
-   CONTROL BUTTONS
-=========================== */
+/* ---------------------------
+   Controls and buttons
+--------------------------- */
 .controls {
     display: flex;
     gap: 10px;
 }
 
-/* ===========================
-   LL(1) TABLE DISPLAY
-=========================== */
+.toggle-btn {
+    background: white;
+    color: #5B9FED;
+    border: 1px solid #CAD7E7;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.toggle-btn:hover:not(:disabled),
+.toggle-btn.active {
+    background: #5B9FED;
+    color: white;
+    box-shadow: 0 4px 8px rgba(97, 175, 239, 0.3);
+}
+
+.toggle-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---------------------------
+   LL(1) table styles
+--------------------------- */
 .ll1-table {
     padding: 1rem;
 }
@@ -259,9 +282,9 @@ html, body {
     padding-left: 1.2rem;
 }
 
-/* ===========================
-   THEME TOGGLE (SUN/MOON)
-=========================== */
+/* ---------------------------
+   Theme toggle button
+--------------------------- */
 .theme-toggle {
     width: 36px;
     height: 36px;
@@ -293,9 +316,9 @@ html, body {
     background-color: rgba(97, 175, 239, 0.1);
 }
 
-/* ===========================
-   DARK THEME OVERRIDES
-=========================== */
+/* ---------------------------
+   Dark theme overrides
+--------------------------- */
 body.dark {
     background-color: #20232a;
     color: #cdd6f4;
@@ -390,9 +413,9 @@ body.dark .theme-toggle:hover {
     box-shadow: 0 0 8px rgba(97, 175, 239, 0.5);
 }
 
-/* ===========================
-   SPECIAL CASE: HELPER NONTERMINAL
-=========================== */
+/* ---------------------------
+   Helper non-terminal styling
+--------------------------- */
 .helper-nonterminal {
     font-style: italic;
     font-weight: 500;
@@ -415,29 +438,6 @@ body.dark .theme-toggle:hover {
     justify-content: space-between;
     margin-bottom: 8px;
     padding-right: 10px;
-}
-
-.toggle-btn {
-    background: white;
-    color: #5B9FED;
-    border: 1px solid #CAD7E7;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
-}
-
-.toggle-btn:hover:not(:disabled),
-.toggle-btn.active {
-    background: #5B9FED;
-    color: white;
-    box-shadow: 0 4px 8px rgba(97, 175, 239, 0.3);
-}
-
-.toggle-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 body.dark .toggle-btn {

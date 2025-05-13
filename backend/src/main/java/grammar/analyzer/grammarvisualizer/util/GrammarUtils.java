@@ -4,6 +4,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Utility class providing methods to compute FIRST sets for symbols and symbol sequences.
+ */
 public class GrammarUtils {
     /**
      * Computes the FIRST set for a single symbol.
@@ -26,11 +29,13 @@ public class GrammarUtils {
     }
 
     /**
-     * Computes the FIRST set for a sequence of symbols (α).
+     * Computes the FIRST set for a sequence of grammar symbols (α).
+     * Iterates symbols, adding their FIRST sets, stopping when ε is not present.
+     * If all symbols derive ε, ε is included in the result.
      *
-     * @param alpha        the array of symbols representing the sequence
-     * @param firstSets    the map of existing FIRST sets
-     * @return the FIRST set for the sequence α
+     * @param alpha     array of grammar symbols (terminals or non-terminals)
+     * @param firstSets map of non-terminals to their FIRST sets
+     * @return set of terminals representing FIRST(α)
      */
     public static Set<String> computeFirstOfAlpha(
             String[] alpha,

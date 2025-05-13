@@ -12,16 +12,21 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 
+/**
+ * Component responsible for computing FOLLOW sets for a given grammar.
+ * Captures each step in StepRecord objects for visualization.
+ */
 @Component
 public class FollowSetCalculator {
     /**
-     * Computes the FOLLOW sets for the given grammar
+     * Computes and stores FOLLOW sets in the provided Grammar model.
+     * Implements the standard iterative algorithm, recording each line of pseudocode.
      *
-     * @param productionRules the production rules of the grammar
-     * @param firstSets       the precomputed FIRST sets
-     * @param nonTerminals    the set of nonterminal symbols
-     * @param startSymbol     the start symbol of the grammar
-     * @param grammar         the grammar object to store the results
+     * @param productionRules map of non-terminals to their production alternatives
+     * @param firstSets       precomputed FIRST sets for lookahead
+     * @param nonTerminals    set of all non-terminal symbols
+     * @param startSymbol     the start symbol, to initialize FOLLOW(startSymbol) with $
+     * @param grammar         Grammar model to populate with FOLLOW sets and step records
      */
     public void computeFollowSets(
             Map<String, List<String>> productionRules,
@@ -30,15 +35,13 @@ public class FollowSetCalculator {
             String startSymbol,
             Grammar grammar
     ) {
-        // --- Step 1 ---
-        // FLWₐ ← ∅ for all A in N
+        // Step 1: Initialize FOLLOW(A) = ∅ for all non-terminals
         Map<String, Set<String>> followSets = SetUtils.initializeEmptySets(nonTerminals);
         List<StepRecord> steps = new ArrayList<>();
         SetUtils.recordStep("Line 1: FOLLOW(A) = ∅ for all A (Initialize)",
                 SetUtils.copySets(followSets), steps, 1);
 
-        // --- Steps 2-4 ---
-        // if A = S then FLWₐ ← { $ }
+        // Steps 2-4: Add endmarker $ to FOLLOW(startSymbol)
         followSets.get(startSymbol).add("$");
         SetUtils.recordStep("Line 2: if A = S then", SetUtils.copySets(followSets), steps, 2);
         SetUtils.recordStep("Line 3: FLW(" + startSymbol + ") ← { $ }",
@@ -47,8 +50,7 @@ public class FollowSetCalculator {
 
         boolean changed;
         int pass = 0;
-        // --- Step 5 ---
-        // Repeat until no changes occur.
+        // Step 5: Repeat until no changes
         do {
             pass++;
             SetUtils.recordStep("Line 5: (Iteration #" + pass + ") Repeat until no changes",
@@ -56,24 +58,21 @@ public class FollowSetCalculator {
 
             changed = false;
 
-            // For each production lhs → α in P.
+            // Process each production for each non-terminal
             for (String lhs : productionRules.keySet()) {
                 for (String production : productionRules.get(lhs)) {
                     String[] symbols = production.split("\\s+");
-
-                    // Iterate over symbols to find occurrences of A.
+                    // Examine each symbol in the production
                     for (int i = 0; i < symbols.length; i++) {
                         String currentSymbol = symbols[i];
                         // Process only nonterminals (those with FOLLOW sets)
                         if (!followSets.containsKey(currentSymbol)) {
-                            continue;
+                            continue; // Skip terminals
                         }
 
-                        // If there is a β after the current symbol:
+                        // Case: symbol followed by β
                         if (i + 1 < symbols.length) {
                             String[] beta = Arrays.copyOfRange(symbols, i + 1, symbols.length);
-                            // --- Step 6 ---
-                            // FLWₐ ← FLWₐ ∪ (FIRST(β) \ {ε})
                             Set<String> firstBeta = GrammarUtils.computeFirstOfAlpha(beta,
                                     firstSets);
                             SetUtils.recordStep("Line 6: Compute FIRST(β) for β = "
@@ -81,6 +80,7 @@ public class FollowSetCalculator {
                                             + " ⇒ " + firstBeta,
                                     SetUtils.copySets(followSets), steps, 6);
 
+                            // Step 7: Add FIRST(β) \ {ε} to FOLLOW(sym)
                             Set<String> firstBetaNoEps = new LinkedHashSet<>(firstBeta);
                             firstBetaNoEps.remove("ε");
                             if (!firstBetaNoEps.isEmpty()) {
@@ -96,8 +96,7 @@ public class FollowSetCalculator {
                                 }
                             }
 
-                            // --- Step 8 ---
-                            // if ε ∈ FIRST(β) then
+                            // Step 8: If ε ∈ FIRST(β), add FOLLOW(lhs) to FOLLOW(sym)
                             SetUtils.recordStep("Line 8: if ε ∈ FIRST(β) then",
                                     SetUtils.copySets(followSets), steps, 8);
                             if (firstBeta.contains("ε")) {
@@ -116,7 +115,7 @@ public class FollowSetCalculator {
                             SetUtils.recordStep("Line 10: end if",
                                     SetUtils.copySets(followSets), steps, 10);
                         } else {
-                            // If currentSymbol is the last symbol in production lhs → α A:
+                            // Case: sym is last in production, add FOLLOW(lhs)
                             SetUtils.recordStep("Line 8: if " + currentSymbol
                                             + " is last in production (B → α A) then",
                                     SetUtils.copySets(followSets), steps, 8);
@@ -138,12 +137,11 @@ public class FollowSetCalculator {
             }
         } while (changed);
 
-        // --- Step 11 ---
-        // Return FLWₐ.
+        // Step 11: Stabilization complete
         SetUtils.recordStep("Line 11: FOLLOW sets stabilized, return FLW_{A}",
                 SetUtils.copySets(followSets), steps, 11);
 
-        // Save results in the grammar object.
+        // Persist results in grammar model
         grammar.setFollowSets(followSets);
         grammar.setFollowStepRecords(steps);
     }

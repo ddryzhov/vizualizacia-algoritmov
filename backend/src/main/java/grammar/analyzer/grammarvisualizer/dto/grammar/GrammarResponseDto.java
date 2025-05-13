@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO for returning grammar analysis results.
+ * Data Transfer Object encapsulating the results of grammar analysis.
+ * Contains computed FIRST, FOLLOW, and PREDICT sets, LL(1) parsing table,
+ * and step-by-step details for visualization.
  */
 @Getter
 @Setter
@@ -33,4 +35,3 @@ public class GrammarResponseDto {
 
     private String transformedGrammar;
 }
-

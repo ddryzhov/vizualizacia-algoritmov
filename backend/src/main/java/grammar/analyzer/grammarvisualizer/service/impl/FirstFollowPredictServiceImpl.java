@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for computing FIRST, FOLLOW, and PREDICT sets.
+ * Service implementation that orchestrates the computation of FIRST, FOLLOW, and PREDICT sets.
  */
 @Service
 @RequiredArgsConstructor
@@ -22,11 +22,11 @@ public class FirstFollowPredictServiceImpl implements FirstFollowPredictService 
     private final PredictSetCalculator predictSetCalculator;
 
     /**
-     * Computes the FIRST sets for the grammar.
+     * Delegates computation of FIRST sets to FirstSetCalculator.
      *
-     * @param productionRules the grammar production rules
-     * @param nonTerminals    the set of non-terminal symbols
-     * @param grammar         the grammar object to store the results
+     * @param productionRules grammar production rules
+     * @param nonTerminals    set of non-terminal symbols
+     * @param grammar         Grammar model to populate with FIRST sets
      */
     @Override
     public void computeFirstSets(
@@ -38,13 +38,13 @@ public class FirstFollowPredictServiceImpl implements FirstFollowPredictService 
     }
 
     /**
-     * Computes the FOLLOW sets for the grammar.
+     * Delegates computation of FOLLOW sets to FollowSetCalculator.
      *
-     * @param productionRules the grammar production rules
-     * @param firstSets       the previously computed FIRST sets
-     * @param nonTerminals    the set of non-terminal symbols
-     * @param startSymbol     the start symbol of the grammar
-     * @param grammar         the grammar object to store the results
+     * @param productionRules grammar production rules
+     * @param firstSets       precomputed FIRST sets for lookahead
+     * @param nonTerminals    set of non-terminal symbols
+     * @param startSymbol     start symbol to initialize FOLLOW(startSymbol)
+     * @param grammar         Grammar model to populate with FOLLOW sets
      */
     @Override
     public void computeFollowSets(
@@ -59,12 +59,12 @@ public class FirstFollowPredictServiceImpl implements FirstFollowPredictService 
     }
 
     /**
-     * Computes the PREDICT sets for the grammar.
+     * Delegates computation of PREDICT sets to PredictSetCalculator.
      *
-     * @param productionRules the grammar production rules
-     * @param firstSets       the computed FIRST sets
-     * @param followSets      the computed FOLLOW sets
-     * @param grammar         the grammar object to store the results
+     * @param productionRules grammar production rules
+     * @param firstSets       computed FIRST sets
+     * @param followSets      computed FOLLOW sets
+     * @param grammar         Grammar model to populate with PREDICT sets
      */
     @Override
     public void computePredictSets(

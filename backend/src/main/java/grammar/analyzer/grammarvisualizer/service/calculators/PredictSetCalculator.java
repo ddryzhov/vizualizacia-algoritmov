@@ -12,17 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.stereotype.Component;
 
+/**
+ * Component responsible for computing PREDICT sets for each production in a grammar.
+ * Combines FIRST sets of production bodies and FOLLOW sets of non-terminals when ε is present.
+ */
 @Component
 public class PredictSetCalculator {
     /**
-     * Compute PREDICT sets for the given grammar.
-     * This method calculates the PREDICT sets for all productions in the grammar by combining
-     * FIRST sets of the production body and FOLLOW sets of the non-terminal when needed.
+     * Computes PREDICT sets and records each pseudocode step for visualization.
      *
-     * @param productionRules the production rules of the grammar
-     * @param firstSets       the computed FIRST sets for the grammar
-     * @param followSets      the computed FOLLOW sets for the grammar
-     * @param grammar         the grammar object to store the results
+     * @param productionRules map of non-terminals to their production alternatives
+     * @param firstSets       precomputed FIRST sets for lookahead
+     * @param followSets      precomputed FOLLOW sets for ε propagation
+     * @param grammar         Grammar model to populate with PREDICT sets and step records
      */
     public void computePredictSets(
             Map<String, List<String>> productionRules,
@@ -30,30 +32,30 @@ public class PredictSetCalculator {
             Map<String, Set<String>> followSets,
             Grammar grammar
     ) {
-        // Initialize an empty map to store PREDICT sets
+        // Initialize storage for PREDICT sets and step records
         Map<String, Set<String>> predictSets = new LinkedHashMap<>();
         List<StepRecord> steps = new ArrayList<>();
 
-        // Step 0: Start computing PREDICT sets
+        // Step 0: Begin PREDICT computation
         SetUtils.recordStep("Line 0: Start computing PREDICT sets",
                 SetUtils.copySets(predictSets), steps, 0);
 
-        // Iterate over all non-terminals and their productions
+        // Iterate through each production
         for (String nonTerminal : productionRules.keySet()) {
             for (String production : productionRules.get(nonTerminal)) {
                 String key = nonTerminal + " -> " + production;
 
-                // Step 1: Compute FIRST(α) for the production body
+                // Step 1: Calculate FIRST(α) for the production body
                 SetUtils.recordStep("Line 1: Compute FIRST(α) for " + key,
                         SetUtils.copySets(predictSets), steps, 1);
 
-                // Handle epsilon or split the production into symbols
+                // Split production or handle ε
                 String[] alpha = production.equals("epsilon") ? new String[]{"epsilon"}
                         : production.split("\\s+");
                 Set<String> firstAlpha = GrammarUtils.computeFirstOfAlpha(alpha,
                         firstSets);
 
-                // Step 2: If ε ∈ FIRST(α), add FOLLOW(nonTerminal) to the PREDICT set
+                // Step 2: If ε in FIRST(α), combine FIRST\{ε} with FOLLOW(nonTerminal)
                 if (firstAlpha.contains("ε")) {
                     SetUtils.recordStep("Line 2: ε ∈ FIRST(α), do sub-steps 2a, 2b",
                             SetUtils.copySets(predictSets), steps, 2);
@@ -64,7 +66,7 @@ public class PredictSetCalculator {
                     SetUtils.recordStep("Line 2a: (firstAlpha \\ {ε}) = " + withoutEps,
                             SetUtils.copySets(predictSets), steps, 2);
 
-                    // Step 2b: Combine (FIRST(α) \ {ε}) with FOLLOW(nonTerminal)
+                    // Step 2b: Union with FOLLOW(nonTerminal)
                     Set<String> combined = new LinkedHashSet<>(withoutEps);
                     combined.addAll(followSets.get(nonTerminal));
                     SetUtils.recordStep("Line 2b: PREDICT(" + key + ") = " + combined
@@ -73,7 +75,7 @@ public class PredictSetCalculator {
 
                     predictSets.put(key, combined);
                 } else {
-                    // Step 3: If ε ∉ FIRST(α), the PREDICT set is simply FIRST(α)
+                    // Step 3: ε not in FIRST(α); PREDICT = FIRST(α)
                     SetUtils.recordStep("Line 3: ε ∉ FIRST(α) => PREDICT("
                                     + key + ") = " + firstAlpha,
                             SetUtils.copySets(predictSets), steps, 3);
@@ -82,11 +84,11 @@ public class PredictSetCalculator {
             }
         }
 
-        // Step 4: Finalize the computation of PREDICT sets
+        // Step 4: Finalize PREDICT set computation
         SetUtils.recordStep("Line 4: Done computing PREDICT sets",
                 SetUtils.copySets(predictSets), steps, 4);
 
-        // Store results in the grammar object
+        // Persist results in grammar model
         grammar.setPredictSets(predictSets);
         grammar.setPredictStepRecords(steps);
     }

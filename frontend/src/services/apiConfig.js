@@ -1,4 +1,12 @@
-// Returns the appropriate API base URL depending on the current environment
+/**
+ * Determine the API base URL based on the current window location.
+ *
+ * - In development (localhost or 127.0.0.1), directs to port 8080.
+ * - On GitHub Pages (hostname ending in “github.io”), uses the Railway production URL.
+ * - Otherwise, uses the same host and port as the current page.
+ *
+ * @returns {string} The base URL for API calls.
+ */
 export function getApiBaseUrl() {
     const { protocol, hostname, port } = window.location;
 

@@ -9,16 +9,17 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 /**
- * Service implementation for building the LL(1) parsing table.
+ * Service implementation for constructing the LL(1) parsing table.
  */
 @Service
 public class Ll1ServiceImpl implements LL1Service {
     /**
-     * Builds the LL(1) table using the PREDICT sets.
+     * Builds the LL(1) parse table based on PREDICT sets and production rule numbering.
+     * Marks the grammar as LL(1) if no parsing conflicts are detected.
      *
-     * @param productionRules the grammar production rules
-     * @param predictSets     the computed PREDICT sets for each production
-     * @param grammar         the grammar object to store the LL(1) table and related info
+     * @param productionRules map of non-terminals to their production alternatives
+     * @param predictSets     map of production identifiers to their PREDICT sets
+     * @param grammar         Grammar model to populate with LL(1) table and compliance flag
      */
     @Override
     public void buildLl1Table(
@@ -26,12 +27,12 @@ public class Ll1ServiceImpl implements LL1Service {
             Map<String, Set<String>> predictSets,
             Grammar grammar
     ) {
-        // Initialize the LL(1) table.
+        // Initialize table cells to empty strings
         Map<String, Map<String, String>> ll1Table = LL1TableUtils
                 .initializeLl1Table(productionRules);
         boolean isLL1 = true;
 
-        // Process each non-terminal.
+        // Iterate over each production to fill table entries
         for (String nonTerminal : productionRules.keySet()) {
             for (String production : productionRules.get(nonTerminal)) {
                 String rule = nonTerminal + " -> " + production;
@@ -39,20 +40,22 @@ public class Ll1ServiceImpl implements LL1Service {
                 String ruleLabel = "R" + ruleNumber;
                 Set<String> predictSet = predictSets.get(rule);
 
-                // Update the LL(1) table for each terminal in the PREDICT set.
+                // For each terminal in PREDICT, assign or append the rule label
                 for (String terminal : predictSet) {
                     String existing = ll1Table.get(nonTerminal).get(terminal);
                     if (!existing.isEmpty()) {
+                        // Conflict: multiple rules predict the same terminal
                         isLL1 = false;
                         ll1Table.get(nonTerminal).put(terminal, existing + ", " + ruleLabel);
                     } else {
+                        // No conflict: assign this rule label
                         ll1Table.get(nonTerminal).put(terminal, ruleLabel);
                     }
                 }
             }
         }
 
-        // Set the LL(1) table in the grammar.
+        // Store the completed table and LL(1) status
         grammar.setLl1Table(ll1Table);
         grammar.setLl1(isLL1);
     }

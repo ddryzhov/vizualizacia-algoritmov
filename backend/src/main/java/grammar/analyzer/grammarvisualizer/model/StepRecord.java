@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Represents a single step in the analysis process.
+ * Model representing a single analysis step in the grammar processing pipeline.
+ * Contains a description, intermediate result sets, and the related pseudocode line.
  */
 @Getter
 @Setter

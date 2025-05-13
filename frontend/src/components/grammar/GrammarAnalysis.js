@@ -23,6 +23,10 @@ import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../switcher/LanguageSwitcher";
 import api from "../../services/axiosInstance";
 
+/**
+ * Main component for grammar analysis.
+ * Manages theme, input, analysis state, and layout resizing.
+ */
 const GrammarAnalysis = () => {
     const [theme, setTheme] = useState("light");
     const [currentAnalysisType, setCurrentAnalysisType] = useState("FIRST");
@@ -39,6 +43,7 @@ const GrammarAnalysis = () => {
     const [lastStepTimestamp, setLastStepTimestamp] = useState(0);
     const { t } = useTranslation();
 
+    // Holds dynamic result data and details for display
     const [analysisData, setAnalysisData] = useState({
         dynamicResult: {},
         stepDetails: "",
@@ -46,11 +51,12 @@ const GrammarAnalysis = () => {
         ll1: false,
     });
 
+    // State for showing transformed grammar when EBNF input
     const [showTransformedInput, setShowTransformedInput] = useState(false);
     const [transformedGrammar, setTransformedGrammar] = useState("");
 
     /**
-     * Toggle between light and dark theme.
+     * Toggle light/dark theme and update body class.
      */
     const toggleTheme = () => {
         const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
@@ -59,13 +65,14 @@ const GrammarAnalysis = () => {
     };
 
     /**
-     * Fetch specific step for selected analysis type.
-     * Uses cache if available.
+     * Fetches a specific step from the backend or cache.
+     * @param stepIndex index of the step to retrieve
      */
     const fetchStep = useCallback(
         async (stepIndex) => {
             const trimmedGrammar = grammar.trim();
             const cacheKey = `${currentAnalysisType}-${trimmedGrammar}-${stepIndex}`;
+            // Use cache if available
             if (cachedResults[cacheKey]) {
                 const cached = cachedResults[cacheKey];
                 setAnalysisData(cached.analysisData);
@@ -127,7 +134,7 @@ const GrammarAnalysis = () => {
     );
 
     /**
-     * Trigger full grammar analysis and fetch the first step.
+     * Performs full grammar analysis on submit and fetches initial step.
      */
     const fetchAnalysis = useCallback(async () => {
         if (!grammar.trim()) {
@@ -168,8 +175,7 @@ const GrammarAnalysis = () => {
     }, [grammar, fetchStep, t]);
 
     /**
-     * Update view when analysis type changes (FIRST, FOLLOW, etc).
-     * Uses cached result if available.
+     * Effect: on analysis type change, fetch or load from cache.
      */
     useEffect(() => {
         setPseudoCodeLine(0);
@@ -214,7 +220,7 @@ const GrammarAnalysis = () => {
     }, [currentAnalysisType]);
 
     /**
-     * Re-analyze grammar on grammar change.
+     * Effect: re-run analysis when grammar input changes.
      */
     useEffect(() => {
         setCachedResults({});
@@ -234,7 +240,7 @@ const GrammarAnalysis = () => {
     }, [grammar]);
 
     /**
-     * Change current analysis step (prev, next, reset, result).
+     * Handler to navigate between steps with rate limiting.
      */
     const handleStep = async (stepIndex) => {
         const now = Date.now();
@@ -260,7 +266,7 @@ const GrammarAnalysis = () => {
     };
 
     /**
-     * Store previous analysis result and switch type.
+     * Cache current analysis and switch type.
      */
     const handleAnalysisTypeChange = async (type) => {
         setCachedResults((prev) => ({
@@ -281,7 +287,7 @@ const GrammarAnalysis = () => {
         setCurrentAnalysisType(type);
     };
 
-    // Handlers for draggable divider
+    // Divider drag handlers
     const handleMouseDown = () => {
         draggingRef.current = true;
     };
@@ -316,6 +322,7 @@ const GrammarAnalysis = () => {
         };
     }, [handleMouseMove, handleMouseUp]);
 
+    // Auto-scroll highlighted pseudocode line
     useEffect(() => {
         const element = document.querySelector(".pseudo-code .highlighted");
         if (element) {
@@ -323,6 +330,7 @@ const GrammarAnalysis = () => {
         }
     }, [pseudoCodeLine]);
 
+    // Determine pseudocode lines for current type
     const pseudoCodeLines = pseudoCodeMapping[currentAnalysisType] || [];
 
     return (

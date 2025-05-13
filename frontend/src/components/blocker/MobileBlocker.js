@@ -1,28 +1,39 @@
 import React, { useEffect, useState } from "react";
 import "../../assets/styles/blocker/MobileBlocker.css";
 
+/**
+ * MobileBlocker component displays a full-screen overlay message
+ * when the viewport width is below a defined threshold (1024px).
+ * Prevents usage on small screens by blocking interactions.
+ */
 const MobileBlocker = () => {
+    // State flag indicating whether the device is considered mobile
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        // Function to check screen width and update isMobile state
+        /**
+         * Checks window.innerWidth to determine mobile status.
+         * Updates `isMobile` if width <= 1024px.
+         */
         const checkMobile = () => {
             const width = window.innerWidth;
-            setIsMobile(width <= 1024); // Treat width <= 1024px as mobile
+            setIsMobile(width <= 1024);
         };
 
+        // Initial check and listener registration
         checkMobile();
         window.addEventListener("resize", checkMobile);
 
+        // Clean up listener on unmount
         return () => {
             window.removeEventListener("resize", checkMobile);
         };
     }, []);
 
-    // If not mobile, render nothing
+    // Render nothing on larger screens
     if (!isMobile) return null;
 
-    // If mobile, show blocking message
+    // Render blocking overlay on mobile screens
     return (
         <div className="mobile-blocker">
             <div className="mobile-message">

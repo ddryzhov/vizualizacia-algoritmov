@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST controller for grammar analysis and step-by-step visualization.
+ * REST controller exposing endpoints for grammar analysis
+ * and step-by-step visualization of analysis results.
  */
 @Tag(name = "Grammar Analysis",
         description = "Endpoints for grammar analysis and step-by-step visualization")
@@ -29,6 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class GrammarController {
     private final GrammarService grammarService;
 
+    /**
+     * Analyzes a provided grammar input, computing FIRST, FOLLOW, and PREDICT sets,
+     * and determines if the grammar is LL(1).
+     *
+     * @param grammarRequest the grammar input DTO
+     * @return DTO containing analysis results
+     */
     @Operation(
             summary = "Analyze grammar",
             description = "Endpoint to analyze a given grammar "
@@ -58,6 +66,13 @@ public class GrammarController {
         return grammarService.analyzeGrammar(grammarRequest);
     }
 
+    /**
+     * Retrieves a specific step of the grammar analysis for FIRST, FOLLOW, or PREDICT,
+     * based on step index and analysis type.
+     *
+     * @param requestDto DTO specifying analysis type, step index, and grammar
+     * @return DTO with step-by-step analysis details
+     */
     @Operation(
             summary = "Retrieve analysis step",
             description = "POST endpoint to request a specific "

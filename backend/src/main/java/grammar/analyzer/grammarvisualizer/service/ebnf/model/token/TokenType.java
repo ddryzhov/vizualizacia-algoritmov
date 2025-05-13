@@ -1,7 +1,7 @@
 package grammar.analyzer.grammarvisualizer.service.ebnf.model.token;
 
 /**
- * Enum representing the various token types used in EBNF parsing.
+ * Enumeration of token types recognized during EBNF lexical analysis.
  */
 public enum TokenType {
     LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, PIPE, IDENTIFIER, END

@@ -1,3 +1,6 @@
+/* ---------------------------
+   Help icons, dialogs & tables
+--------------------------- */
 .help-icon {
     color: #61afef;
     transition: color 0.3s;
@@ -20,6 +23,7 @@
     border-bottom: 1px solid #b0c8e8;
 }
 
+/* Tabs inside dialogs */
 .MuiTabs-root {
     margin-top: -20px;
     border-bottom: 2px solid #61afef;
@@ -37,6 +41,7 @@
     font-weight: 500 !important;
 }
 
+/* Code block styling */
 .code-block {
     background-color: #282c34;
     color: #abb2bf;
@@ -48,6 +53,7 @@
     line-height: 1.4;
 }
 
+/* Symbols table styling */
 .symbols-table {
     width: 100%;
     border-collapse: collapse;
@@ -72,6 +78,7 @@
     background-color: rgba(97, 175, 239, 0.1);
 }
 
+/* List styling */
 ul {
     padding-left: 18px;
     margin: 8px 0;
@@ -84,6 +91,7 @@ ul li {
     font-size: 0.95rem;
 }
 
+/* Typography overrides */
 .MuiTypography-h6 {
     font-family: 'Roboto', sans-serif !important;
     font-weight: 500 !important;
@@ -102,7 +110,9 @@ ul li {
     padding: 20px 24px !important;
 }
 
-/* ==== DARK THEME SUPPORT ==== */
+/* ---------------------------
+   Dark theme overrides
+--------------------------- */
 body.dark .help-icon {
     color: #61afef;
 }

@@ -14,13 +14,23 @@ import CloseIcon from "@mui/icons-material/Close";
 import "../../assets/styles/help/HelpDialog.css";
 import {useTranslation} from "react-i18next";
 
+/**
+ * TabPanel helper component to conditionally render tab content.
+ * @param {object} props
+ * @param {React.ReactNode} props.children - Content to display.
+ * @param {number} props.value - Current selected tab index.
+ * @param {number} props.index - Index of this panel.
+ */
 const TabPanel = ({ children, value, index }) => (
     <div role="tabpanel" hidden={value !== index}>
         {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
     </div>
 );
 
-// HelpDialog component provides user guidance through a tabbed dialog window
+/**
+ * HelpDialog component showing a multi-tab modal with user guidance.
+ * Tabs include general info, grammar syntax rules, and special symbols.
+ */
 const HelpDialog = () => {
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState(0);
@@ -32,10 +42,12 @@ const HelpDialog = () => {
 
     return (
         <>
+            {/* Help icon button to trigger dialog */}
             <IconButton className="help-icon" onClick={handleOpen}>
                 <HelpOutlineIcon />
             </IconButton>
 
+            {/* Modal dialog containing help content */}
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
                 <DialogTitle>
                     {t("Help")}
@@ -50,11 +62,13 @@ const HelpDialog = () => {
 
                 <DialogContent>
                     <Tabs value={tab} onChange={handleTabChange}>
+                        {/* Tabs for different help sections */}
                         <Tab label={t("General")} />
                         <Tab label={t("Grammar Syntax")} />
                         <Tab label={t("Special Symbols")} />
                     </Tabs>
 
+                    {/* General info tab */}
                     <TabPanel value={tab} index={0}>
                         <Typography variant="h6">About Application</Typography>
                         <Typography variant="body1">
@@ -87,6 +101,7 @@ const HelpDialog = () => {
                         </Typography>
                     </TabPanel>
 
+                    {/* Grammar syntax rules tab */}
                     <TabPanel value={tab} index={1}>
                         <Typography variant="h6">{t("Grammar Input Rules")}</Typography>
                         <Typography variant="body2" sx={{ mb: 2 }}>
@@ -135,6 +150,7 @@ B -> 'd'`}
                         </Typography>
                     </TabPanel>
 
+                    {/* Special symbols tab */}
                     <TabPanel value={tab} index={2}>
                         <Typography variant="h6">{t("Special Symbols (TeX notation)")}</Typography>
 

@@ -4,13 +4,16 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.NullValueCheckStrategy;
 
 /**
- * This is a MapStruct configuration class that provides common settings for all mapper interfaces.
+ * Central MapStruct configuration for all mappers in the application.
+ * Uses Spring for component management, constructor injection for dependencies,
+ * and always checks for null values before mapping.
+ * Generated implementations are placed in the specified impl package.
  */
 @org.mapstruct.MapperConfig(
-        componentModel = "spring",
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        implementationPackage = "<PACKAGE_NAME>.impl"
+        componentModel = "spring",                              // Use Spring to manage mapper beans
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,      // Inject dependencies via constructor
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, // Always check for null before mapping
+        implementationPackage = "<PACKAGE_NAME>.impl"           // Package for generated implementation classes
 )
 public class MapperConfig {
 }

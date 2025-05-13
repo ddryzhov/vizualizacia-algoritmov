@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Represents a token with a specific type and text.
+ * Represents a lexical token extracted from EBNF input.
+ * Each token has a type and its raw text value.
  */
 @Getter
 @AllArgsConstructor

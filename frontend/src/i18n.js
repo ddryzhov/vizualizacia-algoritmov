@@ -1,7 +1,12 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-// Translation resources for English and Slovak
+/**
+ * Translation resources for supported languages (English and Slovak).
+ * Keys correspond to translation identifiers used throughout the app.
+ *
+ * Each language defines a `translation` object mapping keys to localized strings.
+ */
 const resources = {
     en: {
         translation: {
@@ -46,7 +51,6 @@ const resources = {
             "nonTerminal": "Non-terminal",
             "grammarRules": "Grammar Rules",
             "Upload .txt": "Upload .txt",
-
             "Grammar Input Rules": "Grammar Input Rules",
             "When writing grammar, follow these basic rules to ensure correct parsing and visualization:": "When writing grammar, follow these basic rules to ensure correct parsing and visualization:",
             "Non-terminals": "Non-terminals",
@@ -116,7 +120,6 @@ const resources = {
             "nonTerminal": "Neterminál",
             "grammarRules": "Pravidlá gramatiky",
             "Upload .txt": "Nahrať .txt súbor",
-
             "Grammar Input Rules": "Pravidlá zápisu gramatiky",
             "When writing grammar, follow these basic rules to ensure correct parsing and visualization:": "Pri zápise gramatiky dodržiavajte tieto základné pravidlá, aby bola správne spracovaná a vizualizovaná:",
             "Non-terminals": "Neterminály",

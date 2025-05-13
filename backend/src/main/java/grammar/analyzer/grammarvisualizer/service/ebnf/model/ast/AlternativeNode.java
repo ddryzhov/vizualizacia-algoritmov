@@ -5,11 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Represents an alternative in the EBNF abstract syntax tree.
+ * AST node representing a set of alternative EBNF expressions.
+ * Each alternative is a possible branch in the grammar definition.
  */
 @Getter
 @AllArgsConstructor
 public class AlternativeNode extends EbnfNode {
-    // List of alternative nodes.
+    /**
+     * A list of EBNF nodes, each representing one alternative branch.
+     */
     private List<EbnfNode> alternatives;
 }

@@ -9,26 +9,38 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * Configures global CORS settings for the application.
- * Allows requests from specified origins, methods and headers.
+ * Global CORS configuration for the application.
+ * Defines allowed origins, HTTP methods, headers, and credential support.
  */
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    /**
+     * Creates and configures a CorsFilter bean with global settings.
+     *
+     * @return a configured CorsFilter
+     */
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+        // Origins permitted to access the API
         corsConfiguration.setAllowedOrigins(List.of(
                 "http://localhost:3000",
                 "https://ddryzhov.github.io",
                 "https://vizualizacia-algoritmov-production.up.railway.app"
         ));
 
+        // HTTP methods allowed for CORS requests
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Headers allowed in CORS requests
         corsConfiguration.setAllowedHeaders(List.of("*"));
+
+        // Whether user credentials (cookies, authorization headers) are supported
         corsConfiguration.setAllowCredentials(true);
 
+        // Apply CORS configuration to all endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
 

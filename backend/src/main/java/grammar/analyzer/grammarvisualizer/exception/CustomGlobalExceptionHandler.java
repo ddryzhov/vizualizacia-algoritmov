@@ -17,8 +17,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
- * Global exception handler for REST API errors.
- * Handles validation errors and custom exceptions.
+ * Handles application-wide exceptions and validation errors,
+ * returning structured error responses with timestamp, status, and messages.
  */
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,6 +27,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     private static final String ERRORS = "errors";
     private static final String FIELD_MESSAGE_SEPARATOR = ": ";
 
+    /**
+     * Handles @Valid validation failures and formats field and global errors.
+     */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -78,6 +81,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return buildResponseEntity(ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    /**
+     * Builds a consistent error response body.
+     */
     private ResponseEntity<Object> buildResponseEntity(String message, HttpStatus status) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP, LocalDateTime.now());

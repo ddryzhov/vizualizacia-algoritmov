@@ -2,17 +2,24 @@ version: "3.8"
 
 services:
   backend:
+    # Build the backend image from ./backend/Dockerfile
     build:
       context: ./backend
+    # Map host port 8080 to container port 8080
     ports:
       - "8080:8080"
+    # Automatically restart the container unless explicitly stopped
     restart: unless-stopped
 
   frontend:
+    # Build the frontend image from ./frontend/Dockerfile
     build:
       context: ./frontend
+    # Map host port 3000 to the container’s Nginx port 80
     ports:
       - "3000:80"
+    # Ensure the backend service is started before the frontend
     depends_on:
       - backend
+    # Automatically restart the container unless explicitly stopped
     restart: unless-stopped

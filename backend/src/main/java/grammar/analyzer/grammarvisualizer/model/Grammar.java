@@ -8,9 +8,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Represents a grammar and stores its analysis results.
- * Contains production rules, computed sets (FIRST, FOLLOW, PREDICT), LL(1) table,
- * and step records for the analysis process.
+ * Domain model representing a grammar and its full analysis state.
+ * Stores production rules, computed FIRST/FOLLOW/PREDICT sets,
+ * LL(1) parsing table, and detailed step records for visualization.
  */
 @Getter
 @Setter

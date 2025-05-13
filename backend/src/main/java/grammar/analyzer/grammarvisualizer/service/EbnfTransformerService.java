@@ -1,8 +1,16 @@
 package grammar.analyzer.grammarvisualizer.service;
 
 /**
- * Interface for transforming EBNF grammar into another format (e.g., BNF).
+ * Service interface for converting EBNF grammar definitions into another format (e.g., BNF).
+ * Implementations perform transformations on the grammar input string.
  */
 public interface EbnfTransformerService {
+    /**
+     * Transforms the provided grammar input into the target format.
+     * For example, converts EBNF syntax (with {}, [], ()) into equivalent BNF productions.
+     *
+     * @param grammarInput raw grammar definition string
+     * @return transformed grammar string in the target format
+     */
     String transform(String grammarInput);
 }

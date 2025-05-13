@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Simple DTO for receiving grammar input.
+ * Data Transfer Object for submitting grammar definitions.
+ * Contains the raw grammar text to be analyzed.
  */
 @Getter
 @Setter

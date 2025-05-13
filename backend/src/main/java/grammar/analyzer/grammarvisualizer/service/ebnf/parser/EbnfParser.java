@@ -14,26 +14,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A recursive descent parser for EBNF grammars.
+ * Recursive-descent parser for EBNF grammar definitions.
+ * Converts a token stream into an AST of EbnfNode objects.
  */
 public class EbnfParser {
-
     private final List<Token> tokens;
     private int pos;
 
+    /**
+     * Initializes the parser with the input string by lexing into tokens.
+     * @param input raw EBNF grammar text
+     */
     public EbnfParser(String input) {
         this.tokens = EbnfLexer.tokenize(input);
         this.pos = 0;
     }
 
+    /**
+     * Peeks at the current token without consuming it.
+     * @return current token or END token if at input end
+     */
     private Token peek() {
         return pos < tokens.size() ? tokens.get(pos) : new Token(TokenType.END, "");
     }
 
+    /**
+     * Consumes and returns the current token, advancing the position.
+     */
     private Token consume() {
         return tokens.get(pos++);
     }
 
+    /**
+     * If the current token matches the given type, consumes it and returns true.
+     * @param type expected token type
+     */
     private boolean match(TokenType type) {
         if (peek().getType() == type) {
             consume();
@@ -43,9 +58,8 @@ public class EbnfParser {
     }
 
     /**
-     * Parses an expression which may contain alternatives.
-     *
-     * @return the parsed EBNF node
+     * Parses an expression, handling alternatives separated by '|'.
+     * @return AST node representing the expression or alternatives
      */
     public EbnfNode parseExpression() {
         EbnfNode left = parseTerm();
@@ -61,9 +75,7 @@ public class EbnfParser {
     }
 
     /**
-     * Parses a term which is a sequence of factors.
-     *
-     * @return the parsed EBNF node
+     * Parses a term consisting of a sequence of factors until a delimiter token.
      */
     private EbnfNode parseTerm() {
         SequenceNode seq = new SequenceNode(new ArrayList<>());
@@ -75,14 +87,16 @@ public class EbnfParser {
         return seq.getElements().size() == 1 ? seq.getElements().get(0) : seq;
     }
 
+    /**
+     * Parses a factor; currently delegates to primary.
+     */
     private EbnfNode parseFactor() {
         return parsePrimary();
     }
 
     /**
-     * Parses a primary element: terminal, non-terminal, or grouped expression.
-     *
-     * @return the parsed EBNF node
+     * Parses a primary EBNF construct: identifier, grouped expression,
+     * optional, or repetition.
      */
     private EbnfNode parsePrimary() {
         Token t = peek();

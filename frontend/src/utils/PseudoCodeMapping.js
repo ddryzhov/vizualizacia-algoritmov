@@ -1,3 +1,8 @@
+/**
+ * Mapping from analysis types to arrays of pseudocode lines.
+ * Used by PseudoCodeBlock to render algorithm steps with MathJax formatting.
+ * Keys: FIRST, FOLLOW, PREDICT.
+ */
 export const pseudoCodeMapping = {
     FIRST: [
         "1. \\textbf{if } \\alpha = \\varepsilon \\Rightarrow FIRST(\\alpha) = \\{ \\varepsilon \\}",

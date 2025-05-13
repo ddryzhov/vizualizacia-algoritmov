@@ -22,6 +22,10 @@ import lombok.Setter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Core service for grammar analysis, providing methods to analyze a grammar and retrieve step details.
+ * Coordinates parsing, computing FIRST/FOLLOW/PREDICT sets, and building the LL(1) table.
+ */
 @Service
 @RequiredArgsConstructor
 public class GrammarServiceImpl implements GrammarService {
@@ -40,11 +44,11 @@ public class GrammarServiceImpl implements GrammarService {
     private Grammar currentGrammar;
 
     /**
-     * Analyze the given grammar input and compute its FIRST, FOLLOW, and PREDICT sets.
-     * Additionally, build the LL(1) table for the grammar.
+     * Analyzes input grammar and returns full analysis results.
+     * Caches results by grammar text for performance.
      *
-     * @param grammarRequest the request DTO containing the grammar input
-     * @return a response DTO containing the analysis results
+     * @param grammarRequest DTO containing raw grammar string
+     * @return DTO with FIRST/FOLLOW/PREDICT sets and LL(1) table
      */
     @Cacheable(value = "grammarCache", key = "#grammarRequest.grammar")
     @Override
@@ -55,11 +59,12 @@ public class GrammarServiceImpl implements GrammarService {
     }
 
     /**
-     * Retrieve the step details for the given analysis type and step index.
+     * Retrieves details for a specific analysis step or the LL(1) table.
      *
-     * @param analysisType the type of analysis (e.g., "FIRST", "FOLLOW", "PREDICT")
-     * @param stepIndex    the index of the step to retrieve
-     * @return a response DTO containing the details of the requested step
+     * @param analysisType type of analysis: FIRST, FOLLOW, PREDICT, or LL1
+     * @param stepIndex    zero-based index of the step to fetch
+     * @param grammar      original grammar string
+     * @return DTO with step-specific details or LL(1) info
      */
     @Override
     public GrammarResponseDto getStep(String analysisType, int stepIndex, String grammar) {
@@ -77,7 +82,6 @@ public class GrammarServiceImpl implements GrammarService {
             List<StepRecord> stepRecords = getStepRecordsForType(analysisType, currentGrammar);
             int totalSteps = stepRecords.size();
 
-            // Clamp stepIndex clearly here
             stepIndex = Math.max(0, Math.min(stepIndex, totalSteps - 1));
 
             StepRecord currentStep = stepRecords.get(stepIndex);
@@ -94,11 +98,10 @@ public class GrammarServiceImpl implements GrammarService {
     }
 
     /**
-     * Perform a full analysis of the grammar.
-     * This method computes the FIRST, FOLLOW, and PREDICT sets, as well as builds the LL(1) table.
+     * Runs the full pipeline: parsing, computing sets, and LL(1) table construction.
      *
-     * @param grammarInput the input string representing the grammar
-     * @return the fully analyzed Grammar object
+     * @param grammarInput raw grammar definition
+     * @return fully populated Grammar domain model
      */
     private Grammar performAnalysis(String grammarInput) {
         Grammar grammar = new Grammar();
@@ -125,6 +128,7 @@ public class GrammarServiceImpl implements GrammarService {
                         .collect(Collectors.joining("\n"))
         );
 
+        // Compute FIRST, FOLLOW, and PREDICT sets
         firstFollowPredictService.computeFirstSets(grammar.getProductionRules(),
                 nonTerminals, grammar);
         firstFollowPredictService.computeFollowSets(grammar.getProductionRules(),
@@ -132,6 +136,7 @@ public class GrammarServiceImpl implements GrammarService {
         firstFollowPredictService.computePredictSets(grammar.getProductionRules(),
                 grammar.getFirstSets(), grammar.getFollowSets(), grammar);
 
+        // Build LL(1) parse table
         ll1Service.buildLl1Table(grammar.getProductionRules(),
                 grammar.getPredictSets(), grammar);
 
@@ -139,9 +144,7 @@ public class GrammarServiceImpl implements GrammarService {
     }
 
     /**
-     * Check if a grammar has been analyzed. If not, throw an exception.
-     *
-     * @throws IllegalStateException if no grammar has been analyzed
+     * Throws if no grammar has been analyzed before fetching steps.
      */
     private void checkGrammarInitialized() {
         if (currentGrammar == null) {
@@ -150,12 +153,11 @@ public class GrammarServiceImpl implements GrammarService {
     }
 
     /**
-     * Retrieve step records for the specified analysis type.
+     * Returns the list of step records for the specified analysis type.
      *
-     * @param analysisType the type of analysis (e.g., "FIRST", "FOLLOW", "PREDICT")
-     * @param grammar      the analyzed Grammar object
-     * @return a list of StepRecord objects for the specified analysis type
-     * @throws IllegalArgumentException if the analysis type is unknown
+     * @param analysisType    analysis type identifier
+     * @param grammar analyzed Grammar model
+     * @return list of step records
      */
     private List<StepRecord> getStepRecordsForType(String analysisType, Grammar grammar) {
         return switch (analysisType.toUpperCase()) {
