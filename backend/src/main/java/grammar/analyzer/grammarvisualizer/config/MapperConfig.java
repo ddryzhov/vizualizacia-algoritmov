@@ -10,10 +10,10 @@ import org.mapstruct.NullValueCheckStrategy;
  * Generated implementations are placed in the specified impl package.
  */
 @org.mapstruct.MapperConfig(
-        componentModel = "spring",                              // Use Spring to manage mapper beans
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR,      // Inject dependencies via constructor
-        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, // Always check for null before mapping
-        implementationPackage = "<PACKAGE_NAME>.impl"           // Package for generated implementation classes
+        componentModel = "spring",
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
+        implementationPackage = "<PACKAGE_NAME>.impl"
 )
 public class MapperConfig {
 }

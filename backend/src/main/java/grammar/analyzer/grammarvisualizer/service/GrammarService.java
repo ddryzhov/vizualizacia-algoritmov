@@ -17,7 +17,8 @@ public interface GrammarService {
     GrammarResponseDto analyzeGrammar(GrammarRequestDto grammarRequest);
 
     /**
-     * Retrieves details for a specific analysis step or the LL(1) table for the previously analyzed grammar.
+     * Retrieves details for a specific analysis step or the LL(1) table for
+     * the previously analyzed grammar.
      *
      * @param analysisType type of analysis ("FIRST", "FOLLOW", "PREDICT", or "LL1")
      * @param stepIndex    zero-based index of the step to fetch; ignored for LL1

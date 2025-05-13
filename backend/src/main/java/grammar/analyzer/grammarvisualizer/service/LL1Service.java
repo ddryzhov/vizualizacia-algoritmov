@@ -12,10 +12,12 @@ import java.util.Set;
 public interface LL1Service {
     /**
      * Builds the LL(1) parse table based on the provided production rules and PREDICT sets.
-     * Updates the given Grammar model with the table and a flag indicating whether the grammar is LL(1).
+     * Updates the given Grammar model with the table and
+     * a flag indicating whether the grammar is LL(1).
      *
      * @param productionRules map of non-terminal symbols to their production alternatives
-     * @param predictSets     map associating each production rule (keyed by "A -> α") with its PREDICT set
+     * @param predictSets     map associating each production rule
+     *                        (keyed by "A -> α") with its PREDICT set
      * @param grammar         Grammar model to populate with the LL(1) table and compliance flag
      */
     void buildLl1Table(

@@ -23,7 +23,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 /**
- * Core service for grammar analysis, providing methods to analyze a grammar and retrieve step details.
+ * Core service for grammar analysis, providing methods to analyze
+ * a grammar and retrieve step details.
  * Coordinates parsing, computing FIRST/FOLLOW/PREDICT sets, and building the LL(1) table.
  */
 @Service
