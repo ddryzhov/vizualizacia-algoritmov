@@ -162,3 +162,9 @@ body.dark .MuiTypography-body2,
 body.dark ul {
     color: #cdd6f4 !important;
 }
+
+.symbols-table td:nth-child(2),
+.symbols-table td:nth-child(3) {
+    font-family: monospace;
+    text-align: center;
+}

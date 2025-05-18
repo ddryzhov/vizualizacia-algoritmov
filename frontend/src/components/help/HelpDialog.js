@@ -175,7 +175,7 @@ B -> 'd'`}
                             <tr>
                                 <td>\to</td>
                                 <td>-&gt;</td>
-                                <td>-></td>
+                                <td>-&gt;</td>
                             </tr>
                             <tr>
                                 <td>\mid</td>
