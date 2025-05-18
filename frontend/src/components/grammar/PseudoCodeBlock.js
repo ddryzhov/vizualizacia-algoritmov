@@ -14,20 +14,27 @@ const PseudoCodeBlock = React.memo(({ pseudoCodeLines, pseudoCodeLine }) => {
     const [isRendered, setIsRendered] = useState(false);
 
     useEffect(() => {
-        // Trigger re-typesetting and fade-in when lines or highlight change
-        let timeout = setTimeout(async () => {
+        let cancelled = false;
+
+        const renderMath = async () => {
             setIsRendered(false);
-            if (window.MathJax && mathJaxRef.current) {
-                try {
-                    await window.MathJax.typesetPromise();
-                } catch (e) {
-                    console.warn("MathJax error:", e);
-                }
-                setIsRendered(true);
+            try {
+                await window.MathJax?.startup?.promise;
+                await window.MathJax.typesetPromise();
+            } catch (e) {
+                console.warn("MathJax error:", e);
             }
+            if (!cancelled) setIsRendered(true);
+        };
+
+        const timeout = setTimeout(() => {
+            renderMath();
         }, 100);
 
-        return () => clearTimeout(timeout);
+        return () => {
+            clearTimeout(timeout);
+            cancelled = true;
+        };
     }, [pseudoCodeLines, pseudoCodeLine]);
 
     return (
@@ -35,7 +42,10 @@ const PseudoCodeBlock = React.memo(({ pseudoCodeLines, pseudoCodeLine }) => {
             {/* Paper container with fade-in on typeset completion */}
             <Paper
                 className="pseudo-code"
-                style={{ opacity: isRendered ? 1 : 0, transition: "opacity 0.2s ease-in-out" }}
+                style={{
+                    opacity: isRendered ? 1 : 0,
+                    transition: "opacity 0.2s ease-in-out"
+                }}
             >
                 {pseudoCodeLines.map((line, index) => (
                     <Box
