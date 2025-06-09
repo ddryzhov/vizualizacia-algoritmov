@@ -70,3 +70,7 @@ A short walkthrough of the application is available via Loom:
 
 Prepared by **Daniil Dryzhov** (2025).  
 Faculty of Electrical Engineering and Informatics, Technical University of Košice.
+
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
